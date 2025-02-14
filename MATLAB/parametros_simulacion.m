@@ -11,7 +11,9 @@ L = 500e-6;
 C = 100e-6;
 
 % Lado de Continua
-Vdc = 30;
+%Vdc = 30;
+Vdc = 300;
+R_load = 300;
 C_filtro_CC = 4 * 470e-6 + 0.47e-6;
 
 % Controlador: Lazo de Corriente - Potencia Activa - Potencia Reactiva
@@ -22,8 +24,8 @@ Kp = L / tau_i;
 Ki = (R+ron) / tau_i;
 
 % Controlador: Tension de Bus
-phi = deg2rad(15); % Propongo margen de fase de 15°
-a = (1 + cos(phi)) / sin(phi);
+%phi = deg2rad(15); % Propongo margen de fase de 15°
+%a = (1 + cos(phi)) / sin(phi);
 
-Kp_dc = C_filtro_CC / (2 * sqrt(3) * a * Ts);
-Ki_dc = Kp / (a^2*3*Ts);
+%Kp_dc = C_filtro_CC / (2 * sqrt(3) * a * Ts);
+%Ki_dc = Kp / (a^2*3*Ts);
