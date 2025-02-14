@@ -1,0 +1,20 @@
+1) Programar periféricos:
+. PWM
+. ADC
+. GPIO
+
+Para el PWM, tener en cuenta las siguientes cosas:
+a. ellos van a generar la interrupción que corra el programa (PWM_INT).
+b. Lógica complementaria entre PWM A y B, con histéresis (programable) entre ambos.
+c. Incluir límites, que eviten la sobremodulación (tenes una Macro al respecto).
+d. Señal moduladora -> EPWM, también disponible en la macro
+e. frecuencia de trabajo constante en 10kHz e incorporar la suficiente resolución para el PWM (ver HRPWM, si fuese necesario)
+
+Para el ADC:
+Generar su configuración contemplando una mejora significativa que creo que podrías encarar: sobre muestrear todo lo que se pueda y procesar el buffer al correr la interrupción.
+desde luego que podes ir generando la configuración para convertir las muestras o registros medidos en valores físicos (V, A, %)
+
+Para GPIO:
+Configurar todas las entradas y salidas digitales de acuerdo a su función en el esquemático de Altium. Son todas entradas y salidas digitales, no hay nada raro. Posiblemente esto ya esté hecho porque el proyecto que les compartí está operativo con el convertidor que tengo en casa.
+En esas entradas digitales, hacer atención en aquellas utilizadas como protección (trip-zones)
+Cuando tengas todas las entradas y salidas probadas a nivel de placa, estamos seguro que está todo OK.
