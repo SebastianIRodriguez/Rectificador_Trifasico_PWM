@@ -22,6 +22,7 @@ plot(...
     v_red_fase.Time,v_red_fase.Data(:,3)...
 );
 subtitle("Entrada de la red - Tensiones de Fase")
+legend("A","B","C")
 
 %% Entrada Trifasica vs Salida Trifasica del Puente
 % Comparacion fase a fase
