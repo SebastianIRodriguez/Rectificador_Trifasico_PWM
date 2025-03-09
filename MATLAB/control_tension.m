@@ -1,3 +1,6 @@
+%feedback()
+%minreal()
+
 s = tf('s');
 
 %Transferencia del lado de continua v_DC / i_DC
