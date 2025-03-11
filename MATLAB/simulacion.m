@@ -1,34 +1,39 @@
 decimation = 1;
+scope_sample_time = 1e-4;
 %% Obtener punto de trabajo
 sim_mode = 1;
 model_name = 'rectificador_pwm.slx';
 %%
 tic 
-
-simOut = sim(model_name,"StopTime","1");%0.05
-%steady_state = get(simOut, "xFinal");
+sim_mode = 1;
+simOut = sim(model_name,"StopTime","0.2");%0.05
+steady_state = get(simOut, "xFinal");
 
 toc
 %% Transferencia Vgd -> Id
 sim_mode = 0;
 
-step_time = 10;
+step_time = 0.005;
 % Valores: -7.2
-vgd_step_start_value = 0;%36.4545
-vgd_step_percentage = 40;
-vgd_step_time = step_time;
+% 09/03/2025: Parece ser -0.11
+vgd_step.start_value = -0.11;
+
+vgd_step.percentage = -0.5;
+vgd_step.end_value = vgd_step.start_value + 39.2 * vgd_step.percentage/100;
+vgd_step.time = step_time;
 % Valores: -15.6
-vgq_step_start_value = 0;%-18.2863
-vgq_step_percentage = 0;
-vgq_step_time = step_time;
+% 09/03/2025: Parece ser 0
+vgq_step.start_value = 0;
+vgq_step.percentage = 0;
+vgq_step.time = step_time;
 %%
 tic
-
+sim_mode = 0;
 simIn = Simulink.SimulationInput(model_name);
 %simIn = simIn.setModelParameter("LoadInitialState","on", "InitialState", steady_state);
 %simIn = setInitialState(simIn,steady_state);%0.005
-simOut = sim(model_name,"StopTime","1");
-ensayo_i = simOut.ensayo_i;
+simOut = sim(model_name,"StopTime","0.5");
+%ensayo_i = simOut.ensayo_i;
 
 toc
 %%

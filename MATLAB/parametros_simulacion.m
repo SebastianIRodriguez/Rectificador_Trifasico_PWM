@@ -22,26 +22,28 @@ tau_conmut = 1 / (2 * pi * f_sw);
 tau_pll = 0.01e-3;
 % Controlador: Lazo de Corriente - Potencia Activa - Potencia Reactiva
 %tau_i = ; %Una decada detras de la f de conmut
-tau_i = max(tau_conmut * 10, tau_pll * 10);
-Kp = L / tau_i;
-Ki = R_tot / tau_i;
+ContI.tau = max(tau_conmut * 10, tau_pll * 10);
+ContI.Kp = L / ContI.tau;
+ContI.Ki = R_tot / ContI.tau;
 
 %% Parametros del controlador de tension de bus
 % Utilizo Kp y Ki para cancelar el polo propio de la planta
 % Luego ubico el polo de la respuesta a lazo cerrado, una decada antes
 % del polo de la respuesta a lazo cerrado de la corriente id
-tau_DC = tau_i * 10;
-Ki_DC = 1 / (R_load * tau_DC);
-Kp_DC = Ki_DC * R_load * C_filtro_CC;
+ContDC.tau = ContI.tau * 10;
+ContDC.Ki = 1 / (R_load * ContDC.tau);
+ContDC.Kp = ContDC.Ki * R_load * C_filtro_CC;
 
 %% Configuracion de la simulacion
 sim_mode = 1;
-vgd_step_start_value = 0;
-vgd_step_percentage = 0;
-vgd_step_time = 0;
-vgq_step_start_value = 0;
-vgq_step_percentage = 0;
-vgq_step_time = 0;
+
+vgd_step.start_value = 0;
+vgd_step.end_value = 0;
+vgd_step.time = 0;
+
+vgq_step.start_value = 0;
+vgq_step.percentage = 0;
+vgq_step.time = 0;
 
 
 %%
