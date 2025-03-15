@@ -19,10 +19,10 @@ C_filtro_CC = 4 * 470e-6 + 0.47e-6;
 
 %% Parametros del controlador de corriente
 tau_conmut = 1 / (2 * pi * f_sw);
-tau_pll = 0.01e-3;
+tau_pll = 1e-3;
 % Controlador: Lazo de Corriente - Potencia Activa - Potencia Reactiva
 %tau_i = ; %Una decada detras de la f de conmut
-ContI.tau = max(tau_conmut * 10, tau_pll * 10);
+ContI.tau = max(tau_conmut * 5, tau_pll * 5);
 ContI.Kp = L / ContI.tau;
 ContI.Ki = R_tot / ContI.tau;
 
@@ -30,7 +30,7 @@ ContI.Ki = R_tot / ContI.tau;
 % Utilizo Kp y Ki para cancelar el polo propio de la planta
 % Luego ubico el polo de la respuesta a lazo cerrado, una decada antes
 % del polo de la respuesta a lazo cerrado de la corriente id
-ContDC.tau = ContI.tau * 10;
+ContDC.tau = ContI.tau * 5;
 ContDC.Ki = 1 / (R_load * ContDC.tau);
 ContDC.Kp = ContDC.Ki * R_load * C_filtro_CC;
 
@@ -45,6 +45,10 @@ vgq_step.start_value = 0;
 vgq_step.percentage = 0;
 vgq_step.time = 0;
 
+vdc_step.time = 0;
+vdc_step.start_value = 0;
+vdc_step.end_value = 0;
+
 
 %%
 sim_sample_time = 1e-7; %%USAR 1e-7
@@ -55,8 +59,8 @@ Cs_max = Pn / (1000 * 2 * pi * f * Vn^2)
 Rs_min = 2 * sim_sample_time / Cs_max
 
 %%
-Cs = 1e-6;
-Rs = 10;
+%Cs = 1e-6;
+%Rs = 10;
 %%
 Rs = 1e5;
 Cs = inf;

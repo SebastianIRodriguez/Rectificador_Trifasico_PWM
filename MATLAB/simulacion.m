@@ -1,41 +1,67 @@
 decimation = 1;
 scope_sample_time = 1e-4;
-%% Obtener punto de trabajo
-sim_mode = 1;
-model_name = 'rectificador_pwm.slx';
-%%
+sim_mode = 0;
+model_name = "rectificador_pwm.slx";
+%% Simulacion a Lazo Cerrado
 tic 
-sim_mode = 1;
-simOut = sim(model_name,"StopTime","0.2");%0.05
+sim_mode = 0;
+simOut = sim(model_name,"StopTime","1");
 steady_state = get(simOut, "xFinal");
 
 toc
+%% Simulacion a Lazo Abierto: Analisis de corriente
 %% Transferencia Vgd -> Id
-sim_mode = 0;
+sim_mode = 1;
+step_time = 0.4;
 
-step_time = 0.005;
-% Valores: -7.2
 % 09/03/2025: Parece ser -0.11
 vgd_step.start_value = -0.11;
-
-vgd_step.percentage = -0.5;
-vgd_step.end_value = vgd_step.start_value + 39.2 * vgd_step.percentage/100;
+vgd_step.percentage = 15;
+vgd_step.end_value = vgd_step.start_value * (1 + vgd_step.percentage/100);
 vgd_step.time = step_time;
-% Valores: -15.6
+
+
 % 09/03/2025: Parece ser 0
 vgq_step.start_value = 0;
 vgq_step.percentage = 0;
 vgq_step.time = step_time;
-%%
+
 tic
-sim_mode = 0;
-simIn = Simulink.SimulationInput(model_name);
-%simIn = simIn.setModelParameter("LoadInitialState","on", "InitialState", steady_state);
-%simIn = setInitialState(simIn,steady_state);%0.005
-simOut = sim(model_name,"StopTime","0.5");
-%ensayo_i = simOut.ensayo_i;
+sim_mode = 1;
+simIn = Simulink.SimulationInput("rectificador_pwm");
+simIn = simIn.setModelParameter("StopTime", "1.5");
+simIn = setInitialState(simIn, steady_state);
+simOut = sim(simIn);
+vd_id_step_response = simOut.vd_id_step_response;
 
 toc
+
+%% Simulacion a Lazo Abierto: Analisis tension de bus
+tic
+
+step_time = 0.1;
+vdc_step.start_value = 10.05;
+vdc_step.percentage = 2;
+vdc_step.end_value = vdc_step.start_value * (1 + vdc_step.percentage / 100);
+vdc_step.time = step_time;
+
+sim_mode = 2;
+simIn = Simulink.SimulationInput("rectificador_pwm");
+simIn = simIn.setModelParameter("StopTime", "1");
+simIn = setInitialState(simIn, steady_state);
+simOut = sim(simIn);
+
+toc
+id_vdc_step_response = simOut.id_vdc_step_response;
+
+
+
+
+
+
+
+
+
 %%
 figure(2)
 hold on;
