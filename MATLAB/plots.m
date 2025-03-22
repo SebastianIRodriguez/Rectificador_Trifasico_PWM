@@ -178,6 +178,32 @@ vc = lowpass(v_puente_fase.Data(:,3), 1000, fs,ImpulseResponse="iir",Steepness=0
 figure;
 subplot(3,1,1)
 plot(...
+    v_puente_fase.Time,va....
+);
+xlim([0.5 1])
+subtitle("Fase A")
+legend("Red","Convertidor")
+
+subplot(3,1,2)
+plot(...
+    v_puente_fase.Time,vb....
+);
+xlim([0.5 1])
+subtitle("Fase B")
+legend("Red","Convertidor")
+
+subplot(3,1,3)
+plot(...
+    v_puente_fase.Time,vc....
+);
+xlim([0.5 1])
+subtitle("Fase C")
+legend("Red","Convertidor")
+%%
+
+figure;
+subplot(3,1,1)
+plot(...
     v_red_fase.Time, v_red_fase.Data(:,1),...
     v_puente_fase.Time,va....
 );

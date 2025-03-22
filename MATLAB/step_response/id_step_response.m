@@ -13,7 +13,7 @@ subplot(2,1,1), plot(t, vgd,'LineWidth',1.5), grid on;
 ylabel("V_G_D"), xlabel("t[s]");
 subplot(2,1,2), plot(t, id,'LineWidth',1.5), grid on;
 ylabel("I_D"), xlabel("t[s]");
-xline(step_time,'r--','LineWidth',1.25)
+xline(time_of_step,'r--','LineWidth',1.25)
 
 %% Plotear respuesta al escalon: Transferencia Vd -> Id
 
@@ -29,8 +29,9 @@ output = output - output(find(t==time_of_step));
 subplot(2,1,1), plot(t, input,'LineWidth',1.5), grid on;
 ylabel("V_G_D"), xlabel("t[s]");
 subplot(2,1,2), plot(t, output,'LineWidth',1.5), grid on;
+title("Respuesta Filtrada - f_c_o_r_t_e = 20 Hz")
 ylabel("I_D"), xlabel("t[s]");
-xline(step_time,'r--','LineWidth',1.25)
+xline(time_of_step,'r--','LineWidth',1.25)
 
 %% Comparar plantas y calcular parametros del controlador
 % Define los datos
@@ -38,46 +39,21 @@ data = iddata(id, vgd, delta_t); % Crea un objeto iddata con el paso de tiempo
 
 % Estima un modelo de transferencia de primer orden
 opt = tfestOptions;
-%'gn' | 'gna' | 'lm' | 'grad' | 'lsqnonlin' | 'fmincon'
-%opt.SearchMethod = 'grad';
-opt.Display = 'on';
+%opt.Display = 'on';
 opt.SearchOptions.Tolerance = 0.000000001;
 opt.SearchOptions.MaxIterations = 1000;
 opt.InputOffset = vgd(1);
-opt.OutputOffset = id(find(t==time_of_step));
-%'iv' (default) | 'svf' | 'gpmf' | 'n4sid' | 'all'
-%opt.InitializeMethod = 'svf';
-init_sys = idtf(H);
-%opt.ErrorThreshold = 1.6;
-sys = tfest(data, 1, 0, opt) % Numerador de grado 1, denominador de grado 1
+opt.OutputOffset = id(t==time_of_step);
+sys = tfest(data, 1, 0, opt); % Numerador de grado 1, denominador de grado 1
+
+disp("Transferencia estimada:");
+disp(sys);
 
 s = tf('s');
 G = 1 / (L*s + (R + ron)); % Hp = Vgdq / Idq
 
-% Muestra el modelo
+%% Muestra el modelo
 %ltiview(sys, G)
-%%
-den = sys.Denominator / sys.Numerator;
-L_exp = den(1);
-R_exp = den(2);
-
-ContI_Exp.tau = max(tau_conmut * 10, tau_pll * 10);
-ContI_Exp.Kp = L_exp / ContI_Exp.tau;
-ContI_Exp.Ki = R_exp / ContI_Exp.tau;
-
-
-% COMPARACION DE RESULTADOS
-% tau = 0.01e-3
-%
-% ContI = 
-%     tau: 1.5915e-04
-%      Kp: 3.1416
-%      Ki: 12.5664
-% 
-% ContI_Exp = 
-%     tau: 1.5915e-04
-%      Kp: 2.6924
-%      Ki: 13.5332
 
 %% Compara respuesta al escalon medida vs estimada
 % Calcular respuesta al escalon segun transferencia ideal y estimada
@@ -103,3 +79,26 @@ plot(t, id, t_ideal, y_ideal + id(find(t==time_of_step)), t_real, y_real  + id(f
 ylabel("I_D"), xlabel("t[s]"), hold on;
 xline(time_of_step,'r--','LineWidth',1.25);
 legend("Medido", "Teorico", "Estimado");
+
+%% Parametros del controlador
+den = sys.Denominator / sys.Numerator;
+L_exp = den(1);
+R_exp = den(2);
+
+ContI_Exp.tau = max(tau_conmut * 10, tau_pll * 10);
+ContI_Exp.Kp = L_exp / ContI_Exp.tau;
+ContI_Exp.Ki = R_exp / ContI_Exp.tau;
+
+
+%% COMPARACION DE RESULTADOS
+% tau_pll = 10e-3
+
+% ContI_Ideal = 
+%     tau: 0.1000
+%      Kp: 0.0050
+%      Ki: 0.0200
+% 
+% ContI_Exp = 
+%     tau: 0.1000
+%      Kp: 0.0099
+%      Ki: 0.1075

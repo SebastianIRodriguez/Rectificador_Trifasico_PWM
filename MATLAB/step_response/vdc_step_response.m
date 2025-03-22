@@ -14,7 +14,7 @@ subplot(2,1,1), plot(t, input,'LineWidth',1.5), grid on;
 ylabel("I_D"), xlabel("t[s]");
 subplot(2,1,2), plot(t, output,'LineWidth',1.5), grid on;
 ylabel("V_D_C"), xlabel("t[s]");
-xline(step_time,'r--','LineWidth',1.25)
+xline(time_of_step,'r--','LineWidth',1.25)
 
 %% Comparar plantas y calcular parametros del controlador
 % Define los datos
@@ -23,7 +23,7 @@ data = iddata(vdc, id, delta_t); % Crea un objeto iddata con el paso de tiempo
 
 % Estima un modelo de transferencia de primer orden
 opt = tfestOptions;
-opt.Display = 'on';
+%opt.Display = 'on';
 opt.SearchOptions.MaxIterations = 1000;
 sys = tfest(data, 1, 0, opt); % Numerador de grado 1, denominador de grado 1
 

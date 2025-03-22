@@ -19,11 +19,3 @@ figure(25);
 %bode(H, 1 / (tau_DC*s + 1)), grid on;
 %bode(H_LC, 1 / (tau_DC * s + 1));
 %legend("H", "Lo que espero")
-
-%% Parametros del controlador
-% Utilizo Kp y Ki para cancelar el polo propio de la planta
-% Luego ubico el polo de la respuesta a lazo cerrado, una decada antes
-% del polo de la respuesta a lazo cerrado de la corriente id
-tau_DC = tau_i * 10;
-Ki_DC = 1 / (R_load * tau_DC);
-Kp_DC = Ki_DC * R_load * C_filtro_CC;
