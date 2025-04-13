@@ -24,7 +24,7 @@ output = id;
 output = -output;
 output = lowpass(output, 20, 1 / delta_t, ImpulseResponse="iir",Steepness=0.85);
 output = movmean(output,100);
-output = output - output(find(t==time_of_step));
+output = output - output(t==time_of_step);
 
 subplot(2,1,1), plot(t, input,'LineWidth',1.5), grid on;
 ylabel("V_G_D"), xlabel("t[s]");
@@ -75,7 +75,7 @@ title( ...
 )
 
 subplot(1,2,2);
-plot(t, id, t_ideal, y_ideal + id(find(t==time_of_step)), t_real, y_real  + id(find(t==time_of_step)), 'LineWidth',1.5), grid on;
+plot(t, id, t_ideal, y_ideal + id(t==time_of_step), t_real, y_real  + id(t==time_of_step), 'LineWidth',1.5), grid on;
 ylabel("I_D"), xlabel("t[s]"), hold on;
 xline(time_of_step,'r--','LineWidth',1.25);
 legend("Medido", "Teorico", "Estimado");

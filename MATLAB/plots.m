@@ -106,35 +106,18 @@ subtitle("Fase C")
 legend("Red","Convertidor")
 
 
-%%
+%% COMPARACION TENSION DE FASE - RED VS CONVERTIDOR
+v_puente_fase = simOut.v_puente_fase;
+v_red_fase = simOut.v_red_fase;
 fs = 1 / (v_puente_fase.Time(2) - v_puente_fase.Time(1));
 va = lowpass(v_puente_fase.Data(:,1), 1000, fs,ImpulseResponse="iir",Steepness=0.95);
-vb = lowpass(v_puente_fase.Data(:,2), 1000, fs,ImpulseResponse="iir",Steepness=0.95);
-vc = lowpass(v_puente_fase.Data(:,3), 1000, fs,ImpulseResponse="iir",Steepness=0.95);
 
 figure;
-subplot(3,1,1)
 plot(...
     v_red_fase.Time, v_red_fase.Data(:,1),...
     v_puente_fase.Time,va....
-);
+), grid on;
 subtitle("Fase A")
-legend("Red","Convertidor")
-
-subplot(3,1,2)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,2),...
-    v_puente_fase.Time,vb....
-);
-subtitle("Fase B")
-legend("Red","Convertidor")
-
-subplot(3,1,3)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,3),...
-    v_puente_fase.Time,vc....
-);
-subtitle("Fase C")
 legend("Red","Convertidor")
 
 %% SIN FILTRAR
