@@ -39,9 +39,10 @@ config.sample_time = 1e-7;
 % CUIDADO: 
 % Si se utilizan valores mas grandes de Ts pueden aparecer artefactos en la tension generada por el convertidor
 
-config.scope_sample_time = 1e-4;
+config.scope_sample_time = 1e-3;
 config.mode = 0;
 config.model_name = "rectificador_pwm";
+config.usar_fuente_lado_DC = false;
 
 %% Parametros del snubber de los IGBTs
 config.vsc.snubber.Rs = 1e5;

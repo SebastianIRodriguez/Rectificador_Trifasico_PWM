@@ -1,11 +1,3 @@
-%% Tension de Red en plano dq
-plot(...
-    Vdq.Time, Vdq.Data(:,1),...
-    Vdq.Time,Vdq.Data(:,2)...
-);
-grid on;
-legend('Vd','Vq');
-
 %% Entrada Trifasica vs Salida Trifasica del Puente
 figure
 subplot(2,1,1)
@@ -52,60 +44,6 @@ plot(...
 subtitle("Fase C")
 
 
-%% Vector rotante
-plot( ...
-    Vabc_alphabeta(:,1), Vabc_alphabeta(:,2), ...
-    Vabc_target_alphabeta(:,1), Vabc_target_alphabeta(:,2),...
-    Vabc_puente_alphabeta(:,1), Vabc_puente_alphabeta(:,2)...
-    )
-legend('Red', 'Objetivo segun control', 'Logrado')
-%%
-figure
-plot( ...
-    v_puente_fase.Time,Vabc_target_alphabeta(:,1), ...
-    v_puente_fase.Time,Vabc_target_alphabeta(:,2)...
-    )
-legend("alpha","beta")
-
-
-%%
-figure;
-plot(...
-    i_fase.time, i_fase.signals.values(:,1),...
-    i_fase.time,i_fase.signals.values(:,2),...
-    i_fase.time,i_fase.signals.values(:,3)...
-);
-subtitle("Corrientes de Fase")
-legend("i_A","i_B","i_C")
-
-
-%%
-figure;
-subplot(3,1,1)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,1),...
-    Vabc_target.time,Vabc_target.signals.values(:,1)....
-);
-subtitle("Fase A")
-legend("Red","Convertidor")
-
-subplot(3,1,2)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,2),...
-    Vabc_target.time,Vabc_target.signals.values(:,2)....
-);
-subtitle("Fase B")
-legend("Red","Convertidor")
-
-subplot(3,1,3)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,3),...
-    Vabc_target.time,Vabc_target.signals.values(:,3)....
-);
-subtitle("Fase C")
-legend("Red","Convertidor")
-
-
 %% COMPARACION TENSION DE FASE - RED VS CONVERTIDOR
 v_puente_fase = simOut.v_puente_fase;
 v_red_fase = simOut.v_red_fase;
@@ -118,6 +56,8 @@ plot(...
     v_puente_fase.Time,va....
 ), grid on;
 subtitle("Fase A")
+ylim([-50 50])
+xlim([0.25 0.30])
 legend("Red","Convertidor")
 
 %% SIN FILTRAR
@@ -127,30 +67,11 @@ vb = v_puente_fase.Data(:,2);
 vc = v_puente_fase.Data(:,3);
 
 figure;
-subplot(3,1,1)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,1),...
-    v_puente_fase.Time,va....
-);
+plot(v_puente_fase.Time,va,'g'), hold on;
+plot(v_red_fase.Time, v_red_fase.Data(:,1), 'r', 'LineWidth',1.25), grid on;
+xlim([0.05 0.075])
 subtitle("Fase A")
 legend("Red","Convertidor")
-
-subplot(3,1,2)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,2),...
-    v_puente_fase.Time,vb....
-);
-subtitle("Fase B")
-legend("Red","Convertidor")
-
-subplot(3,1,3)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,3),...
-    v_puente_fase.Time,vc....
-);
-subtitle("Fase C")
-legend("Red","Convertidor")
-
 
 %%
 fs = 1 / (v_puente_fase.Time(2) - v_puente_fase.Time(1));
@@ -242,7 +163,7 @@ subtitle("Fase C")
 legend("Red","Convertidor")
 
 %% TENSIONES V_AN y V_AB con FILTRO PASABAJOS 1kHz
-fs = sim_sample_time;
+fs = config.sample_time;
 va_fase_filtr = lowpass(v_puente_fase.Data(:,1), 1000, fs,ImpulseResponse="iir",Steepness=0.85);
 va_linea_filtr = lowpass(v_puente_linea.Data(:,1), 1000, fs,ImpulseResponse="iir",Steepness=0.85);
 va_fase = v_puente_fase.Data(:,1);
