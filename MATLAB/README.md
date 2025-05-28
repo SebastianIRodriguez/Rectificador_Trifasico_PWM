@@ -2,8 +2,8 @@
 
 ## Introduccion
 En este repositorio se modela el Rectificador Trifasico PWM presente en el Laboratorio de Electronica de el edificio de Civil - Electronica en La Siberia.
-La idea es poder realizar una simulación del equipo para poder realizar el ajuste de su sistema de control y posteriormente verificar su funcionamiento en distintas condiciones de trabajo.
-El rectificador en si, consiste de un puente de IGBTs en conjunto con 3 inductores de desacople.
+La idea es realizar una simulación del equipo para poder realizar el ajuste de su sistema de control y posteriormente verificar su funcionamiento en distintas condiciones de trabajo.
+El rectificador en si, consiste de un puente de IGBTs en conjunto con 3 inductores de desacople. La carga utilizada es resistiva pura.
 El sistema de control se realiza en el plano dq. Cuenta con dos lazos anidados de control, un control interno de corriente (en fase y cuadratura) y un control externo de tension del bus de continua.
 Para modular el convertidor se utiliza un bloque de modulación vectorial.
 La frecuencia de conmutacion elegida es de 10kHz. Para simular el convertidor, se utilizará su modelo promediado.
@@ -12,7 +12,7 @@ La frecuencia de conmutacion elegida es de 10kHz. Para simular el convertidor, s
 A continuacion se detallan los distintos archivos presentes en el repositorio
 
 ### parametros.m
-En este archivo se configuran las principales caracteristicas electricas del convertidor, asi como los parámetros de los controladores.
+En este archivo se configuran las principales caracteristicas electricas del convertidor, asi como los parámetros ideales de los controladores y configuraciones generales de la simulación. Todas estas configuraciones se encuentran contenidas en el espacio de trabajo, dentro de la variable "config".
 
 ### simulacion.m
 Aqui se encuentra el codigo que ejecuta la simulacion, pudiendose identificar 5 situaciones distintas.

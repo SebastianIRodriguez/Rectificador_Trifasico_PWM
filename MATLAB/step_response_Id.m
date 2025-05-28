@@ -3,6 +3,7 @@ time_of_step = 0.2;
 t = vd_id_step_response.time;
 t_final = t(end);
 idx = find(t == 0.18);
+delta_t = t(2) - t(1);
 
 vgd = vd_id_step_response.signals(1).values;
 id = vd_id_step_response.signals(2).values;

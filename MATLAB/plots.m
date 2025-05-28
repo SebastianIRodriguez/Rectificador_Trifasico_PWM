@@ -1,49 +1,3 @@
-%% Entrada Trifasica vs Salida Trifasica del Puente
-figure
-subplot(2,1,1)
-plot(...
-    v_puente_fase.Time, v_puente_fase.Data(:,1),'r*',...
-    v_puente_fase.Time,v_puente_fase.Data(:,2),'g*',...
-    v_puente_fase.Time,v_puente_fase.Data(:,3),'b*'...
-), hold on;
-stairs(v_puente_fase.Time, v_puente_fase.Data(:,1),'r');
-stairs(v_puente_fase.Time, v_puente_fase.Data(:,2),'g');
-stairs(v_puente_fase.Time, v_puente_fase.Data(:,3),'b');
-subtitle("Salida del Puente - Tensiones de Fase")
-
-subplot(2,1,2)
-plot(...
-    v_red_fase.Time, v_red_fase.Data(:,1),...
-    v_red_fase.Time,v_red_fase.Data(:,2),...
-    v_red_fase.Time,v_red_fase.Data(:,3)...
-);
-subtitle("Entrada de la red - Tensiones de Fase")
-legend("A","B","C")
-
-%% Entrada Trifasica vs Salida Trifasica del Puente
-% Comparacion fase a fase
-subplot(3,1,1)
-plot(...
-    v_puente_fase.Time, v_puente_fase.Data(:,1),...
-    v_red_fase.Time,v_red_fase.Data(:,1)...
-);
-subtitle("Fase A")
-
-subplot(3,1,2)
-plot(...
-    v_puente_fase.Time, v_puente_fase.Data(:,2),...
-    v_red_fase.Time,v_red_fase.Data(:,2)...
-);
-subtitle("Fase B")
-
-subplot(3,1,3)
-plot(...
-    v_puente_fase.Time, v_puente_fase.Data(:,3),...
-    v_red_fase.Time,v_red_fase.Data(:,3)...
-);
-subtitle("Fase C")
-
-
 %% COMPARACION TENSION DE FASE - RED VS CONVERTIDOR
 v_puente_fase = simOut.v_puente_fase;
 v_red_fase = simOut.v_red_fase;
@@ -69,13 +23,8 @@ subtitle("Fase A")
 legend("Red","Convertidor")
 
 %% SIN FILTRAR
-fs = 1 / (v_puente_fase.Time(2) - v_puente_fase.Time(1));
-va = v_puente_fase.Data(:,1);
-vb = v_puente_fase.Data(:,2);
-vc = v_puente_fase.Data(:,3);
-
 figure;
-plot(v_puente_fase.Time,va,'g'), hold on;
+plot(v_puente_fase.Time,v_puente_fase.Data(:,1),'g'), hold on;
 plot(v_red_fase.Time, v_red_fase.Data(:,1), 'r', 'LineWidth',1.25), grid on;
 xlim([0.16 0.20])
 subtitle("Fase A")

@@ -1,8 +1,8 @@
 %% FEEDFORWARD - POTENCIA NULA
 
 %Parametros
-config.mode = 1;
-config.usar_fuente_lado_DC = 1;
+config.mode = ModoControl.SOLO_FEEDFORWARD;
+config.usar_fuente_lado_DC = true;
 config.step.vgd = crear_configuracion_escalon(0, 0, 0);
 config.step.vgq = crear_configuracion_escalon(0,0,0);
 
@@ -21,7 +21,7 @@ toc
 load("datos\steady_state_300V_180W.mat");
 
 %Parametros
-config.mode = 0;
+config.mode = ModoControl.SISTEMA_COMPLETO;
 config.usar_fuente_lado_DC = false;
 config.ContI = ContI_Ideal;
 contfig.ContDC = ContDC_Ideal;
