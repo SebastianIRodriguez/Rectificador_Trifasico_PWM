@@ -27,8 +27,8 @@ config.ContI = ContI_Ideal;
 % Luego ubico el polo de la respuesta a lazo cerrado, una decada antes
 % del polo de la respuesta a lazo cerrado de la corriente id
 ContDC_Ideal.tau = config.ContI.tau * 10;
-ContDC_Ideal.Ki = ContDC_Ideal.tau / config.vsc.R_load;
-ContDC_Ideal.Kp = config.vsc.C * ContDC_Ideal.tau;
+ContDC_Ideal.Ki = 1 / (config.vsc.R_load * ContDC_Ideal.tau);
+ContDC_Ideal.Kp = config.vsc.C / ContDC_Ideal.tau;
 config.ContDC = ContDC_Ideal;
 
 %% Configuracion por default de escalones

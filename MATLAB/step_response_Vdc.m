@@ -67,8 +67,8 @@ C_exp = den(1);
 R_exp = 1 / den(2);
 
 ContDC_Exp.tau = ContI_Exp.tau * 10;
-ContDC_Exp.Ki = ContDC_Exp.tau / R_exp;
-ContDC_Exp.Kp = C_exp * ContDC_Exp.tau;
+ContDC_Exp.Ki = 1 / (R_exp * ContDC_Exp.tau);
+ContDC_Exp.Kp = C_exp / ContDC_Exp.tau;
 
 ContDC_Ideal
 ContDC_Exp
