@@ -67,21 +67,18 @@ C_exp = den(1);
 R_exp = 1 / den(2);
 
 ContDC_Exp.tau = ContI_Exp.tau * 10;
-ContDC_Exp.Ki = 1 / (R_exp * ContDC_Exp.tau);
-ContDC_Exp.Kp = ContDC_Exp.Ki * R_exp * C_exp;
+ContDC_Exp.Ki = ContDC_Exp.tau / R_exp;
+ContDC_Exp.Kp = C_exp * ContDC_Exp.tau;
 
 ContDC_Ideal
 ContDC_Exp
 
-%% COMPARACION DE RESULTADOS
-% tau_pll = 10e-3
+%% GUARDAR DATOS DEL CONTROLADOR
+save("datos/parametros_control_tension_experimental","ContDC_Exp")
 
-% ContDC_Ideal = 
-%     tau:  0.1000
-%      Kp:  0.0100
-%      Ki:  1.6800
-% 
-% ContDC_Exp = 
-%     tau:  0.1000
-%      Kp:  0.0829
-%      Ki: 17.8394
+%% EXPORTAR FEEDFORWARD TENSION
+M = [t output y_ideal];
+M = downsample(M,100);
+T = array2table(M);
+T.Properties.VariableNames(1:3) = {'tiempo','vdc_medido', 'vdc_teorico'};
+writetable(T,'Para el informe/respuesta_escalon_tension_bus.csv')

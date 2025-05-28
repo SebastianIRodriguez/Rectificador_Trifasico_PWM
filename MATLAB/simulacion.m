@@ -8,17 +8,17 @@ config.step.vgq = crear_configuracion_escalon(0,0,0);
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
-simIn = simIn.setModelParameter("StopTime", "0.25", "LoadInitialState","off");
+simIn = simIn.setModelParameter("StopTime", "0.5", "LoadInitialState","off");
 
 %Ejecutar simulacion
 tic
-sim(simIn);
+simOut = sim(simIn);
 toc
 
 
 %% SIMULACION A LAZO CERRADO - CONTROLADORES IDEALES
 
-load("Para el informe\steady_state_baja_potencia.mat");
+load("datos\steady_state_300V_180W.mat");
 
 %Parametros
 config.mode = 0;
@@ -28,7 +28,7 @@ contfig.ContDC = ContDC_Ideal;
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
-simIn = simIn.setModelParameter("StopTime", "0.5");
+simIn = simIn.setModelParameter("StopTime", "10");
 simIn = setInitialState(simIn, steady_state);
 
 %Ejecutar simulacion
@@ -42,16 +42,13 @@ steady_state = get(simOut, "xFinal");
 
 %% SIMULACION A LAZO ABIERTO: ANALISIS DE CORRIENTE
 
-% Para 3000 W
-% vgd = -0.11, vgq = 0
-% Para  180 W
-% vgd = -0.55, vgq = 0
+load("datos\steady_state_300V_180W.mat");
 
 % Parametros
-config.mode = 1;
-config.usar_fuente_lado_DC = 1;
-config.step.vgd = crear_configuracion_escalon(-0.55, 15, 0.2);
-config.step.vgq = crear_configuracion_escalon(0,0,0);
+config.mode = ModoControl.SOLO_FEEDFORWARD;
+config.usar_fuente_lado_DC = true;
+config.step.vgd = crear_configuracion_escalon(-0.517, 15, 0.2);
+config.step.vgq = crear_configuracion_escalon(0.128,0,0);
 
 % Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
@@ -65,25 +62,23 @@ toc
 
 %Resultados del ensayo
 vd_id_step_response = simOut.vd_id_step_response;
+save("datos\id_vdc_step_response.mat", "vd_id_step_response")
 
 
 %% SIMULACION A LAZO ABIERTO: ANALISIS TENSION DE BUS
 
+load("datos\steady_state_300V_180W.mat");
+
 config.ContI = ContI_Exp;
 
-% Para 3000 W
-% ud = 10.05
-% Para  180 W
-% ud = 0.617
-
 %Parametros
-config.mode = 2;
-config.usar_fuente_lado_DC = 0;
-config.step.id = crear_configuracion_escalon(0.617, 10, 0.25);
+config.mode = ModoControl.FF_Y_PI_CORRIENTE_Y_COMP_VDC;
+config.usar_fuente_lado_DC = false;
+config.step.id = crear_configuracion_escalon(0.608, 1, 0.25);
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput("rectificador_pwm");
-simIn = simIn.setModelParameter("StopTime", "5");
+simIn = simIn.setModelParameter("StopTime", "10");
 simIn = setInitialState(simIn, steady_state);
 
 %Ejecutar simulacion
@@ -93,28 +88,51 @@ toc
 
 %Resultados del ensayo
 id_vdc_step_response = simOut.id_vdc_step_response;
+save("datos\id_vdc_step_response.mat", "id_vdc_step_response")
 
-%% SIMULACION A LAZO CERRADO - CONTROLADORES EXPERIMENTALES
+%% ENSAYO A LAZO CERRADO - CAMBIO EN SETPOINT DE CORRIENTE
 
-load("Para el informe\steady_state_baja_potencia.mat");
+load("datos\steady_state_300V_180W.mat");
 
 %Parametros
-config.mode = 0;
-config.usar_fuente_lado_DC = 0;
-config.perturbacion_tension_habilitada = true;
-config.perturbacion_tension_ti = 0.1; % segundos
-config.perturbacion_tension_amp = -5; % por ciento 
+config.mode = ModoControl.FF_Y_PI_CORRIENTE;
+config.usar_fuente_lado_DC = true;
+config.step_setpoint_corriente = 1; % por ciento
+
 config.ContI = ContI_Exp;
-config.ContDC = ContDC_Exp;
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
 simIn = simIn.setModelParameter("StopTime", "1");
 simIn = setInitialState(simIn, steady_state);
 
-config.perturbacion_tension_ampl_habilitada = false;
+%Ejecutar simulacion
+tic
+simOut = sim(simIn);
+toc
+
+%% ENSAYO A LAZO CERRADO - CAMBIO EN SETPOINT DE TENSION
+
+load("datos\steady_state_300V_180W.mat");
+
+%Parametros
+config.mode = ModoControl.SISTEMA_COMPLETO;
+config.usar_fuente_lado_DC = false;
+
+config.cambio_tension_referencia = true;
+config.step_setpoint_tension = 1; % en porcentaje
+
+config.ContI = ContI_Exp;
+config.ContDC = ContDC_Exp;
+
+%Configurar simulacion
+simIn = Simulink.SimulationInput(config.model_name);
+simIn = simIn.setModelParameter("StopTime", "10");
+simIn = setInitialState(simIn, steady_state);
 
 %Ejecutar simulacion
 tic
 simOut = sim(simIn);
 toc
+
+config.step_setpoint_tension = false;
