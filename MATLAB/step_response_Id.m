@@ -20,7 +20,7 @@ xline(time_of_step,'r--','LineWidth',1.25)
 %% Obtencion de transferencias
 
 % TRANSFERENCIA REAL A PARTIR DE RESPUESTA AL ESCALON
-sys = estimar_transferencia_orden1(vgd, id, delta_t, true);
+sys = estimar_transferencia_orden1(vgd, id, delta_t, false);
 
 % TRANSFERENCIA TEORICA
 s = tf("s");
@@ -54,8 +54,8 @@ title( ...
 subplot(1,2,2);
 plot( ...
     t, id, ...
-    t_ideal, y_ideal - 3.068, ...
-    t_real, y_real  - 3.068, ...
+    t_ideal, y_ideal - 3.071, ...
+    t_real, y_real  - 3.071, ...
     'LineWidth',1.5), grid on;
 ylabel("I_D"), xlabel("t[s]");
 xline(time_of_step,'r--','LineWidth',1.25);
@@ -78,7 +78,7 @@ ContI_Exp
 save("datos/parametros_control_corriente_experimental","ContI_Exp")
 
 %% EXPORTAR FEEDFORWARD TENSION
-M = [t id (y_ideal - 3.062) ];
+M = [t id (y_ideal - 3.071) ];
 T = array2table(M);
 T.Properties.VariableNames(1:3) = {'tiempo','id_medido','id_teorico'};
-writetable(T,'Para el informe/respuesta_escalon_corriente.csv')
+writetable(T,'Para el informe/respuesta_escalon_corriente1.csv')

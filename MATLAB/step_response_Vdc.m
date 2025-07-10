@@ -28,7 +28,7 @@ xline(time_of_step,'r--','LineWidth',1.25)
 delta_t = t(2) - t(1);
 
 % Estima un modelo de transferencia de primer orden
-sys = estimar_transferencia_orden1(id, vdc, delta_t, true);
+sys = estimar_transferencia_orden1(id, vdc, delta_t, false);
 
 % TRANSFERENCIA TEORICA
 s = tf('s');

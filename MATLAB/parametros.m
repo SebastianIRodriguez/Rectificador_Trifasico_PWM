@@ -44,9 +44,21 @@ config.step_setpoint_corriente = 0;
 %% Configuracion general de la simulacion
 config.sample_time = 1e-5; 
 config.scope_sample_time = 1e-4;
+config.to_workspace_sample_time = 1e-5;
 config.mode = 0;
 config.model_name = "rectificador_pwm";
 config.usar_fuente_lado_DC = false;
+
+%% Modelo Conmutado
+config.sensor_input_sample_time = 1 / config.vsc.f_sw;
+config.sensor_input_delay = 0;
+config.steady_state_file = "modelo_conmutado\steady_state_300V_180W.mat";
+%Setear en la config: Relative tolerance 1e-9
+%% Modelo Promediado
+config.sensor_input_sample_time = -1;
+config.sensor_input_delay = 1;
+config.steady_state_file = "datos\steady_state_300V_180W.mat";
+%Setear en la config: Relative tolerance 1e-3
 
 %% Parametros del snubber de los IGBTs
 config.vsc.snubber.Rs = 1e5;
