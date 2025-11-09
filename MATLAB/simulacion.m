@@ -18,7 +18,7 @@ toc
 
 %% SIMULACION A LAZO CERRADO - CONTROLADORES IDEALES
 
-load(config.steady_state_file);
+%load(config.steady_state_file);
 
 %Parametros
 config.mode = ModoControl.SISTEMA_COMPLETO;
@@ -28,10 +28,10 @@ contfig.ContDC = ContDC_Ideal;
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
-simIn = simIn.setModelParameter("StopTime", "5");
+simIn = simIn.setModelParameter("StopTime", "1");
 simIn = setInitialState(simIn, steady_state);
 
-%simIn = simIn.setModelParameter("StopTime", "15", "LoadInitialState","off");
+%simIn = simIn.setModelParameter("StopTime", "1", "LoadInitialState","off");
 
 %Ejecutar simulacion
 tic
@@ -49,8 +49,8 @@ load(config.steady_state_file);
 % Parametros
 config.mode = ModoControl.SOLO_FEEDFORWARD;
 config.usar_fuente_lado_DC = true;
-config.step.vgd = crear_configuracion_escalon(-0.5165, 15, 0.2);
-config.step.vgq = crear_configuracion_escalon(0.2452, 0, 0);
+config.step.vgd = crear_configuracion_escalon(-3.7716, 15, 0.2);
+config.step.vgq = crear_configuracion_escalon(-0.6738, 0, 0);
 
 % Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
@@ -76,7 +76,7 @@ config.ContI = ContI_Exp;
 %Parametros
 config.mode = ModoControl.FF_Y_PI_CORRIENTE_Y_COMP_VDC;
 config.usar_fuente_lado_DC = false;
-config.step.id = crear_configuracion_escalon(0.608, 1, 0.25);
+config.step.id = crear_configuracion_escalon(15.08, 1, 0.25);
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput("rectificador_pwm");
