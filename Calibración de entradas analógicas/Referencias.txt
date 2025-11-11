@@ -1,0 +1,1 @@
+Consideramos positivo si la corriente sale del + de la placa
