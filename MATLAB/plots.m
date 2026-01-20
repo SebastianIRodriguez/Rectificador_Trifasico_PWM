@@ -1,6 +1,6 @@
 %% COMPARACION TENSION DE FASE - RED VS CONVERTIDOR
 v_puente_fase = simOut.v_puente_fase;
-v_red_fase = simOut.v_red_fase;
+v_red_fase = simOut.v_red_cap;
 
 figure;
 plot(...
@@ -8,8 +8,10 @@ plot(...
     v_puente_fase.Time,v_puente_fase.Data(:,1)....
 ), grid on;
 subtitle("Fase A")
-ylim([-50 50])
-xlim([0.26 0.30])
+%ylim([-50 50])
+%xlim([0.26 0.30])
+xlim([0 0.05])
+ylim([-300 300])
 legend("Red","Convertidor")
 
 %% CORRIENTE

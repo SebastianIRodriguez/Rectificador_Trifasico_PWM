@@ -20,11 +20,11 @@ xline(time_of_step,'r--','LineWidth',1.25)
 %% Obtencion de transferencias
 
 % TRANSFERENCIA REAL A PARTIR DE RESPUESTA AL ESCALON
-sys = estimar_transferencia_orden1(vgd, id, delta_t, false);
+sys = estimar_transferencia_orden1(vgd, id, delta_t, true);
 
 % TRANSFERENCIA TEORICA
 s = tf("s");
-H = 1 / (config.vsc.L*s + config.vsc.R);
+H = 1 / ((config.vsc.Lgrid + config.vsc.Linv)*s + config.vsc.Rgrid);
 
 %% Comparativa frecuencial entre transferencia teorica vs experimental
 ltiview(sys, H)
@@ -54,8 +54,8 @@ title( ...
 subplot(1,2,2);
 plot( ...
     t, id, ...
-    t_ideal, y_ideal - 3.071, ...
-    t_real, y_real  - 3.071, ...
+    t_ideal, y_ideal - 21.9, ...
+    t_real, y_real  - 21.9, ...
     'LineWidth',1.5), grid on;
 ylabel("I_D"), xlabel("t[s]");
 xline(time_of_step,'r--','LineWidth',1.25);
@@ -75,7 +75,7 @@ ContI_Ideal
 ContI_Exp
 
 %% GUARDAR DATOS DEL CONTROLADOR
-save("datos/parametros_control_corriente_experimental","ContI_Exp")
+save("punto_trabajo_nominal/promediado/parametros_control_corriente_experimental","ContI_Exp")
 
 %% EXPORTAR FEEDFORWARD TENSION
 M = [t id (y_ideal - 3.071) ];

@@ -28,10 +28,10 @@ contfig.ContDC = ContDC_Ideal;
 
 %Configurar simulacion
 simIn = Simulink.SimulationInput(config.model_name);
-simIn = simIn.setModelParameter("StopTime", "1");
-simIn = setInitialState(simIn, steady_state);
+%simIn = simIn.setModelParameter("StopTime", "1");
+%simIn = setInitialState(simIn, steady_state);
 
-%simIn = simIn.setModelParameter("StopTime", "1", "LoadInitialState","off");
+simIn = simIn.setModelParameter("StopTime", "10", "LoadInitialState","off");
 
 %Ejecutar simulacion
 tic

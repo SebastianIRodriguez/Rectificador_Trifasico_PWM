@@ -10,7 +10,7 @@ t = t(idx:end);
 id = id_vdc_step_response.signals(1).values(idx:end);
 vdc = id_vdc_step_response.signals(2).values(idx:end);
 
-input = id;
+input = id - id(1);
 output = vdc;
 output = output - output(1);
 
@@ -27,18 +27,18 @@ xline(time_of_step,'r--','LineWidth',1.25)
 % Define los datos
 delta_t = t(2) - t(1);
 
-% Estima un modelo de transferencia de primer orden
-sys = estimar_transferencia_orden1(id, vdc, delta_t, false);
-
 % TRANSFERENCIA TEORICA
 s = tf('s');
-Z_load = config.vsc.R_load;
-Z_cap = 1 / (s * config.vsc.C);
-Z_dc = Z_cap * Z_load / (Z_cap + Z_load);
+Z_dc = config.vsc.R_load / (1 + config.vsc.R_load * config.vsc.C * s);
+
+% Estima un modelo de transferencia de primer orden
+[num, den] = tfdata(Z_dc);
+G_init = idtf(num, den);
+sys = estimar_transferencia_orden1(input, output, delta_t, G_init, true);
 
 %% Comparacion de bodes de ambas transferencias
 % Muestra el modelo
-ltiview(sys, Z_dc)
+ltiview(sys, Z_dc);
 
 %% Comparar respuestas al escalon
 % Calcular respuesta al escalon segun transferencia ideal y estimada

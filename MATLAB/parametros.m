@@ -1,4 +1,4 @@
-%% Parametros
+%% Parametros - Configuracion Nominal
 config.vsc = crear_configuracion_convertidor( ...
     50, ...                     %f_red
     10000, ...                  %f_sw
@@ -9,26 +9,28 @@ config.vsc = crear_configuracion_convertidor( ...
     1.06, ...                   %Rd
     31e-3, ...                  %R_igbt
     4 * 470e-6 + 0.47e-6, ...   %C_dc
-    400^2/5910, ...             %R_load
+    400^2/2500, ...             %R_load
     400, ...                    %V_dc
     130 ...                     %V_grid
 );
 
-%config.vsc = crear_configuracion_convertidor( ...
-%    50, ...                     %f_red
-%    10000, ...                  %f_sw
-%    82e-3, ...                  %R_ac
-%    23e-6, ...                  %L_grid
-%    673e-6, ...                 %L_inv
-%    18.4e-6, ...                %Cf
-%    1.06, ...                   %Rd
-%    31e-3, ...                  %R_igbt
-%    4 * 470e-6 + 0.47e-6, ...   %C_dc
-%    75^2/300, ...               %R_load
-%    75, ...                     %V_dc
-%    28 ...                      %V_grid
-%);
+%% Parametros - Configuracion de Proyecto
+config.vsc = crear_configuracion_convertidor( ...
+    50, ...                     %f_red
+    10000, ...                  %f_sw
+    82e-3, ...                  %R_ac
+    23e-6, ...                  %L_grid
+    673e-6, ...                 %L_inv
+    18.4e-6, ...                %Cf
+    1.06, ...                   %Rd
+    31e-3, ...                  %R_igbt
+    4 * 470e-6 + 0.47e-6, ...   %C_dc
+    75^2/300, ...               %R_load
+    75, ...                     %V_dc
+    28 ...                      %V_grid
+);
 
+%% Tiempos
 tau_pll = 10e-3;
 tau_limitante = max(config.vsc.tau_switching, tau_pll);
 
@@ -65,7 +67,7 @@ config.sample_time = 1e-5;
 config.scope_sample_time = 1e-4;
 config.to_workspace_sample_time = 1e-6;
 config.mode = 0;
-config.model_name = "rectificador_pwm";
+config.model_name = "rectificador_pwm_plecs";
 config.usar_fuente_lado_DC = false;
 
 %% Modelo Conmutado
