@@ -1,0 +1,4 @@
+Bits		Mínimo escalón de tensión
+8		12.9 mV
+9		6.44 mV
+10		3.22 mV
