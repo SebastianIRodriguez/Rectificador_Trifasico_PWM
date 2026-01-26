@@ -27,6 +27,8 @@ int main(void)
 
     //pwm_1_2_3_sim_vectorial_test();
 
+    //DelayUs(20/2);
+
     // Oportunidad de mejora, que la eleccion de la senoidal simulada sea parametro
     pwm_1_2_3_pll_test();
 

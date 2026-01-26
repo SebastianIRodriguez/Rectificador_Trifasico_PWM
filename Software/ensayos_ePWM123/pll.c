@@ -80,7 +80,7 @@ GRID_VALUES Grid;                        // Estructura para ver los valores de i
 INTEGRATOR INT_CC_A, INT_CC_B, INT_CC_C; // Integradores utilizados para quitar la componente de continua del EPLL
 float EPLL_u0 = 0;                       // Variable de ajuste para la integracion de la componenete de continua
 float EPLL_u1 = 200;                     // Variable de ajuste para los cores - 200
-float EPLL_u2 = 12000;                   // Ganancia del estimulador, una constante que se ajusta para el funcionamiento del estimador de frecuencia, originalmente 20
+float EPLL_u2 = 10000; // Antes 12000                   // Ganancia del estimulador, una constante que se ajusta para el funcionamiento del estimador de frecuencia, originalmente 20
 float EPLL_u3 = 200;                     // Variable de ajuste para los cores - 200
 
 ANG_DIFF theta_error;          // Variable utilizada para representar el error de fase
@@ -184,12 +184,12 @@ void run_pll ()// PIE3.4 @ 0x000D66  EPWM4_INT (EPWM4)
     float Uv = ((AdcRegs.ADCRESULT1 >> 4) - OFFSET_UV) * KUV;
     float Vv = ((AdcRegs.ADCRESULT3 >> 4) - OFFSET_VV) * KVV;
     float Rv = (mrv - OFFSET_RV) * KRV;
-    float Tv = (mtv - OFFSET_TV) * KTV;
     float Sv = (msv - OFFSET_SV) * KSV;
+    float Tv = (mtv - OFFSET_TV) * KTV;
 
-    Conv.Va = Rv;
-    Conv.Vb = Sv;
-    Conv.Vc = Tv;
+    Conv.Va = Rv / 2; // Antes Rv
+    Conv.Vb = Sv / 2;
+    Conv.Vc = Tv / 2; // Antes Tv
 
 // --- Aqui habria una adquisicion analogica, si la tuviera... ---
 
@@ -259,6 +259,7 @@ void run_pll ()// PIE3.4 @ 0x000D66  EPWM4_INT (EPWM4)
     Conv.Ic = SGN_3Ph_I.c;
 
     EPwm4Regs.CMPA.half.CMPA = PROJECT_PERIOD * (1 - (Conv.Va + offet_Va) / 3.3); // Mostramos una fase de la trifasica simulada en el pin 6
+    EPwm4Regs.CMPB = PROJECT_PERIOD * (1 - (Conv.Vb + offet_Va) / 3.3); // Mostramos una fase de la trifasica simulada en el pin 7
 #endif
 #endif
 

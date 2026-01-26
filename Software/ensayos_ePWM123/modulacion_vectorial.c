@@ -19,7 +19,7 @@ void actualizar_pwm_vector_rotante(float Vx, float Vy)
 int secuencia_simulada()
 {
     static float fase = 0;
-    float E = 20;    // Tension de bus
+    float E = 60;    // Tension de bus
     float V_ref = 5; // Modulo de la senoidal
 
     float periodo = 1.0 / frecuencia;
@@ -189,13 +189,13 @@ int secuencia_optima()
 int imprimir_vector(float u, float theta)
 {
     //float fase = theta + M_PI_2 - M_PI/20; //0,577367
-    float fase = theta + M_PI * 0.5; // * 0.36; //+ M_PI * 0.4; 0.0025 * M_PI; 0.0025 es el porcentaje de pi que representa el muestreo
+    float fase = theta;// + M_PI * 0.5; // * 0.36; //+ M_PI * 0.4; 0.0025 * M_PI; 0.0025 es el porcentaje de pi que representa el muestreo
     fase = fmod(fase, 2 * M_PI); // Creo que esto es lo que deberia ir
 
     // Ajuste de amplitud
     //u = u * 0,707106;
 
-    float E = 20; // Tension del bus de continua
+    float E = 60; // Tension del bus de continua
 
     // float periodo = 1.0 / frecuencia;
     float Ts = 0.0001; // Siempre que Fs sea 10 kHz
