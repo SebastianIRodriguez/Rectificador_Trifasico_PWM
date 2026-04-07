@@ -1,0 +1,28 @@
+Midiendo Vtr e It.
+
+Ensayo de vacío:
+---> Tensión de línea medida: 36.6V de pico, el doble de pico a pico
+---> Corriente de pico: 200 mA, el doble de pico a pico. 
+---> Corriente RMS según pinza amperométrica (extech instruments MA 445) 120 mA
+---> Tensión de línea eficaz: 30.6
+---> Ángulo 5.04 ms
+
+De la fuente de cc: 40v, 95 mA, 3.8W
+NewFile3 
+NewFile4
+-----------------
+
+Ensayo a rotor clavado:
+--> Tensión de línea medida: 36.6
+--> Corriente de pico: 1A
+--> Corriente RMS según pinza amperométrica: 650 mA, osc: 680mA
+--> Tensión de línea eficaz por multímetro: 30.2V
+--> Ángulo 3.68 ms
+
+NewFile5
+
+De la fuente de CC: 40V, 561 mA, 22.44W
+
+id = 0.709357738
+iq = -0.738301992
+z = -0.053451445

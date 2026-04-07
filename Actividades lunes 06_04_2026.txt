@@ -1,0 +1,41 @@
+06/04/26
+El anterior encuentro verificamos que se medían bien los parámetros de Id e Iq utilizando las resistencias, inductacias y el motor del laboratorio.
+
+
+Objetivo de hoy:
+
+	Hacer el primer sincronismo, es decir, tener una conexión entre el convertidor y la red con el feed-forward y el control de corriente en cero. 
+
+	A favor:
+		El encuentro pasado vimos que se mide bien Id e Iq
+		Sabemos que el feed-forward funciona bien (hay sincronismo).
+
+
+	Contras: 
+		No hay Anti-windup
+		No hay parada de emergencia
+
+	A probar: 
+		Revisar que se genere correctamente la señal de salida
+		Verificar que el control corriente responda acorde (se desfacen las tensiones o similar).
+
+
+Al final estamos midiendo la tensión SR (S está en la pinza roja, R en la negra).
+La idea es generar el sincronismo únicamente con la señal proveniente del PLL. 
+Vamos a verificar con el osciloscopio que la señal del convertidor y la red se encuentren sincronizadas previas a la conexión.
+Luego se cerrará una térmica y luego un contactor.
+
+En newfile5 se almacena la previa, es decir, tensión generada por la lectura del PLL en el convertidor vs la tensión de red. 
+En newfile6 está la tensión vs corriente "fuga".
+En newFile7 está la tensión de red vs la del convertidor con llave cerrada 
+En newFile8 está idsp 0.5A y kp en 0.1
+En newFile9 está idsp en 1A, kp en 0.2 y ki en 0.5. Llave cerrada. La fuente de tensión tiene 40V, 0.79 A y 31.8 W
+
+
+
+k sugerida:
+ki > 1
+kp indeterminada
+
+
+Revisar forma de onda de la corriente en el motor (no debería haber 3er armónico)

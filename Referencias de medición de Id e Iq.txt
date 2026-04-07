@@ -1,0 +1,9 @@
+
+Estamos midiendo Vtr e It.
+Newfile 0 es motor en vacío
+NewFile 1 es lo mismo con valor RMS
+NewFile 2 es motor clavado.
+NewFile 3 es caca, ya que era el desfasaje entre Vl e Il con carga resistiva pura, pero sin la L de filtro. Entonces la corriente tiene demasiado Ruido.
+
+Estamos midiendo Vsn sobre R, e Is, que es lo mismo que Isn por estar carga en estrella. 
+NewFile 4 tiene solo Id (acá pusimos que genere al vector con tensión 20)

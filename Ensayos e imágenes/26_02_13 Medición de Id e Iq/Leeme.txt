@@ -1,0 +1,4 @@
+Hoy queríamos medir / Calcular Id e Iq pero el convertidor tenía otros planes.
+Observamos que tanto Id como Iq tenían valores muy erráticos. 
+Haciendo diversos análisis descubrimos que el problema radica en la medición de la corriente de la fase R.
+Resulta que el contacto está flojo o algo similar y en ocasiones mide bien y en otras se clava en un valor fijo.
