@@ -1,0 +1,22 @@
+/**
+ * @file PWM_config.h
+ * @author your name (you@domain.com)
+ * @brief
+ * @version 0.1
+ * @date 2025-10-30
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
+
+#ifndef PWM_CONFIG_H
+#define PWM_CONFIG_H
+
+void InitEPwm123_static();
+void InitEPwm123_withInterrupt();
+void InitEPwm123_withInterrupt_pwm4_debug();
+
+void pwm1_enable_interrupt();
+void pwm1_configure_interrupt();
+
+#endif
