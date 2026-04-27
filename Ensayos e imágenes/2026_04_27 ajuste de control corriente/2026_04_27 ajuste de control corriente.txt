@@ -1,0 +1,18 @@
+Todas las pruebas se hacen con un escalón de id set point desde 0.5 A a 1.5A
+Canal 1 es el set point y canal 2 es la id medida.
+
+NewFile5 -> kp 0.5, ki 1.5
+
+
+-------------- cambio
+La resolución es 1 A/V, el escalón es de 1A (1 -> 2 A)
+NewFile6 -> kp 0.1, ki 2.5
+
+El tiempo de respuesta (5 tau) del control corriente debe tender a 100 ms. 
+
+
+Medición de PLL, salto de 15° en fase y 10% de tensión. Debe responder al "casi 100%" en 20 ms como mucho.
+
+NewFile7 -> escalón de fase de 30°, 30° por voltio, con ganancia u3 de 200. 
+
+NewFile8 -> escalón de fase de 30°, 30° por voltio, con ganancia u3 de 400. 
