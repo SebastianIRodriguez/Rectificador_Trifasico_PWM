@@ -1,0 +1,23 @@
+Usamos el osciloscopio Hantek DSO5072P.
+
+Pi/6 = 0.5235
+
+Pi= 3.1415926
+2 pi = 6.28318
+
+pic_25_4 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 400
+
+pic_25_5 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 200
+
+pic_25_6 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 200
+
+
+
+/// Usamos filtro de 150 k + 22 k + 100 nF (aproximadamente 9 Hz de f corte)
+
+El escalón base es de 0.00125
+
+En la siguiente iteración, lo reducimos a la mitad (0.000625)
+En la siguiente iteración, lo reducimos a la mitad (0.0003125)
+En la siguiente iteración, lo reducimos a la mitad (0.00015625) 000078125
+En la siguiente iteración, lo reducimos a la mitad (0.000078125)
