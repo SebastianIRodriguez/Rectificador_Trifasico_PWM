@@ -1,0 +1,27 @@
+- TZSEL (trip zone select) es un registro presente en cada módulo EPWM. Con este registro se indica qué pines trip-zone son usados por dicho ePWM.
+
+- Se necesita 1 ciclo de SYSCLKOUT en estado bajo en los pines TZ para generar la reacción del módulo.
+
+- Cada pin TZ puede ser configurado para generar un evento "one shot" o "cycle-by-cycle". Estos modos se configuran con los registros TZSEL[CBCn], and TZSEL[OSHTn], donde 'n' corresponde al pin TZ.
+
+-  En la condición "One-Shot" (OSHT), al ocurrir el evento TZ, se lleva a cabo la acción especificada en TZCTL. Además, se levanta la bandera de evento one-shot TZFLG[OST] y se lanza la interrupción EPWMx_TZINT si se encuentra habilitada  en el registro TZEINT y en el periférico PIE. Para salir de la condición de falla, se debe limpiar manualmente el registro TZCLR[OST]. 
+
+Ejemplo de uso:
+Scenario A:
+A one-shot trip event on TZ1 pulls both EPWM1A, EPWM1B low and also forces EPWM2A and EPWM2B
+high.
+• Configure the ePWM1 registers as follows:
+– TZSEL[OSHT1] = 1: enables TZ1 as a one-shot event source for ePWM1
+– TZCTL[TZA] = 2: EPWM1A will be forced low on a trip event.
+– TZCTL[TZB] = 2: EPWM1B will be forced low on a trip event.
+• Configure the ePWM2 registers as follows:
+– TZSEL[OSHT1] = 1: enables TZ1 as a one-shot event source for ePWM2
+– TZCTL[TZA] = 1: EPWM2A will be forced high on a trip event.
+– TZCTL[TZB] = 1: EPWM2B will be forced high on a trip evento
+
+
+Se ve que se puede lanzar la interrupción desde SW con el registro TZFRC[OST] según el esquema de la página 268.
+
+EL TZ1 ES EL GPIO12 - PIN33 - CONV1-OUT2 PIN9/FICHA P11
+
+
