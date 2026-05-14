@@ -1,0 +1,10 @@
+El día de hoy cableamos el botón de parada de emergencia y probamos que funcione junto al módulo trip-zone. 
+Funcionó correctamente. Sin embargo, hay muchos falsos triggers producto del ruido electromagnético y la 
+sensibilidad del pin. 
+
+Se pudo solventar o por lo menos atenuar el efecto colocando un capacitor electrolítico de 2.2 uF entre el pin y masa. 
+
+Se probó que el módulo responda a la protección de umbral de tensión positiva y negativa accionado por la macro 
+"PROTECTION_MACRO" con resultado exitoso.
+
+Queda pendiente la prueba de corriente. 

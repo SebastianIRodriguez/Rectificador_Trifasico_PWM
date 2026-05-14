@@ -1,0 +1,3 @@
+El día de hoy descubrí que el módulo trip-zone estaba correctamente implementado en el sw.
+Sin embargo, dado lo débil del pullup de entrada del micro, cualquier pequeña perturbación disparaba el trip-zone.
+En este archivo quedó implementado el trip-zone para disparar ante un estado bajo en la entrada TZ1 (pin digital 12) o cuando se invoca al forzado por sw mediante una macro.
