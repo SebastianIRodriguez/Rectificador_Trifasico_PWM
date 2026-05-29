@@ -1,0 +1,16 @@
+Hoy estamos probando todas las entradas y salidas luego del masivo recableado que hubo para poder cerrar el tablero.
+
+Para ello, nos valemos de las macros implementadas en la rev5 de inversor vectorial. 
+
+Chequeamos que el botón de trip-zone sigue funcionando correctamente.
+Chequeamos que la habilitación de el módulo IPM funciona correctamente. 
+Chequeamos que los contactores de DC y AC funcionan correctamente. 
+
+Relé de precarga AC funciona OK
+La medición del estado de CAC está OK
+Medición de estado de las térmicas está OK (tanto de DC como AC)
+
+Queda revisar inestabilidad en estado "flotante"/alto de CDC
+Verificar por qué carajo no se cierra el relé de DC
+
+Verificamos la correcta secuencia de fases. (PSC1 en 20 y NSC1 en 0.12)
