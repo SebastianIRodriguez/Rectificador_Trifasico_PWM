@@ -1,0 +1,27 @@
+2026_06_02
+
+Hoy queremos verificar por qué no funciona correctamente el inversor. 
+Comenzamos realizando pruebas con la carga activa. 
+
+Al entregar 2.5 A (Corriente saliente del +) se leen 2.5 A en cada corriente.
+
+Al entregar 2.5 A (Corriente entrante del +) se leen -2.5 A en cada corriente.
+
+Por ende, la medición de corriente funciona correctamente
+
+
+
+
+Ahora vamos a medir la tensión SR generada y la de la red. 
+
+La imagen 4 es la evolución 0.5 A -> 1.5 A con ki de 1 
+La imagen 5 es la evolución con ki de 2
+La imagen 6 es la evolución con ki de 3
+La imagen 7 es la evolución con ki de 4
+La imagen 8 es la evolución con ki de 5
+La imagen 9 es la evolución con ki de 4.59
+La imagen 10 es la evolución con ki de 6
+La imagen 11 es la evolución con ki de 7
+La imagen 12 es la evolución con ki de 8
+La imagen 13 es la evolución con ki de 20
+

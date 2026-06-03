@@ -1,0 +1,7 @@
+- Ver por qué no cierra el relé de DC.
+- Queda revisar inestabilidad en estado "flotante"/alto de CDC
+
+png 1 es que verificamos el sincronismo
+
+
+No funciona la medición de Ri lareputamadre que nos parió

@@ -9,7 +9,7 @@ pic_25_4 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 400
 
 pic_25_5 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 200
 
-pic_25_6 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 200
+pic_25_6 -> Respuesta al escalón de 30 grados en la fase. Ganancia de 200 -> el tiempo de 5 tau resulta cercano a 16 ms. Por ende, tau = 3.2
 
 
 
