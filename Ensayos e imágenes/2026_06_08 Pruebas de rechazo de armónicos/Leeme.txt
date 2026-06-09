@@ -1,0 +1,38 @@
+08/06/2026
+
+	Cada core aparentemente agrega 4 us al tiempo de interrupción.
+	14 y 15 son las imágenes del convertidor sin cores agregados, siendo el T HIGH lo que dura el cálculo de la interrupción.
+
+	16 es quitando un core (sec negativa)
+
+Antes de implementar otro core, los valores medidos son:
+	PSCU1	20.25
+	NSCU1	0.14
+	NSCU5	0.35
+	PSCU7	0.05
+
+Tensión de multímetro fase-neutro: 14,5
+
+En la 17 es el tiempo con toooodos los cores
+
+Ambas u1 y u3 de cores en 400
+La 18 es con todos los cores de 1ro, 5to, 7mo. 2A sp
+La 19 ídem con SP 1.5
+
+Ambas u1 y u3 de cores en 200
+
+La 20 es con los cores y U1 y U3 en 200 (todo original).
+IDSP 1.5A
+
+La 21 es la FFT de la red (id 2)
+La 22 es la FFT de la corriente con solo u5N y u7p.(id 2)
+La 23 es la FFT de la corriente con u5n 1.7 (id 2)
+La 24 es la corriente con u5n 1.7 (id 1.5)
+La 25 es la FFT de la corriente con u5n 1.5 (id 1.5)
+La 26 es la corriente con u5n 1.5 (id 1.5)
+La 27 es la corriente con u5n 1.5 (id 1.5)
+
+Pensar en armónicos por tiempo de conmutación muerto
+
+
+
