@@ -1,0 +1,18 @@
+Hoy realizamos varias pruebas para ver si por fin podíamos hacer andar el rectificador.
+
+Al final LO LOGRAMOS LA RECONCHA PUTA DE LORA!!!!!!!!! VAMOS CARAJO VIVA MESSI, VIVA EL FÚTBOL Y VIVA ARGENTINA. 
+
+Para ello, utilizamos:
+
+float kp_control_i = 0.1;
+float ki_control_i = 5;
+float kp_control_v = 0.01;
+float ki_control_v = 0;
+
+Nos dimos cuenta que utilizar un ki "elevado" para el control tensión, inestabiliza el sistema si está en vacío, ya que esta variable depende de la constante RC del sistema. 
+El control i de la corriente se integra 1 milisegundo después de que se habilita la señal en los IGBT con la intención de acumular un poquito de error.
+
+Se propone plantear un control adaptativo sencillo en el cual ki sea nulo o muy bajo hasta cerrar el contactor de DC y colocar la carga. 
+Tal vez, si es sencillo, se colocará un control adaptativo más elaborado y complejo.
+
+------------------ FALTA VER POR QUÉ CARAJO ARRANCA EN -inf LA VARIABLE DE ESTADO DEL PI DE CORRIENTE DIRECTA!!!!! ----------------

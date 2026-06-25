@@ -1,0 +1,11 @@
+El valor de estado del control PI de tensión para un Set point de 50V y una carga de 51 ohm aprox, es de 0.94.
+
+Probamos conectar el control completo, es decir, control Vpi y control Ipi con la carga conectada desde el inicio y una rampa discreta de a 5 voltios y respondió bien todo. 
+
+quickprint 28 muestra la respuesta del control arrancado de cero al cerrar el contactor de continua. 
+No hay valores iniciales de las variables de estado. 
+
+en el 30 se muestra la misma evolución, pero con un estado inicial de PI de 0.5
+en el 31 se muestra la misma evolución, pero con un estado inicial de PI de 0.6
+en el 32 estamos viendo la tensión del bus con el PI de tensión con condiciones iniciales de 0.94 A en el control tensión
+en el 34 estamos viendo la tensión del bus con el PI de tensión con condiciones iniciales de 0.94 A en el control tensión y de -1.4 en el de corriente
