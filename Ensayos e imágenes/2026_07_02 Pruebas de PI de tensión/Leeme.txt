@@ -1,0 +1,12 @@
+El día de hoy quiero repetir varias pruebas pero con el control corriente más rápido que la última vez:
+
+En este caso, se usará: 
+float kp_control_i = 0.1;
+float ki_control_i = 20;
+
+float kp_control_v = 0.01;
+float ki_control_v = 0.11;
+
+Mejoramos el programa para que el control I de tensión entre luego de que la tensión se haya mantenido un milisegundo en un entorno del 5% del set point. 
+
+Además, retiramos las condiciones iniciales del control I para ver la respuesta del sistema ante una "carga desconocida"
