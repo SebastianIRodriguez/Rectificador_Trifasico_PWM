@@ -1,0 +1,29 @@
+El día de hoy quiero comparar como se comporta el control de tensión al colocar el control I al momento de conmutación del contactor de DC con y sin condiciones iniciales. 
+
+QuickPrint5 tiene la imagen del control con CI de tensión con kp_control_v = 0.01, kp_control_v = 0.11; 
+QuickPrint6 tiene la imagen del control sin CI de tensión con kp_control_v = 0.01, kp_control_v = 0.11; 
+QuickPrint7 tiene la imagen del control sin CI de tensión con kp_control_v = 0.01, kp_control_v = 0.11; 
+QuickPrint8 tiene la imagen del control con CI de tensión con kp_control_v = 0.01, kp_control_v = 0.11; 
+QuickPrint9 tiene la imagen del control sin CI de tensión con kp_control_v = 0.1, kp_control_v = 0.11; 
+QuickPrint10 tiene la imagen del control sin CI de tensión con kp_control_v = 0.1, kp_control_v = 0.11; 
+QuickPrint11 tiene la imagen del control sin CI de tensión con kp_control_v = 0.1, kp_control_v = 0.2;
+
+------- No dar bola a lo de arriba, sin querer dejé mal la CI del control corriente.
+
+------- Se hicieron pruebas con SP de tensión en 60 V
+QuickPrint12 tiene el control tensión solo K, con K = 1
+QuickPrint13 tiene el control tensión solo K, con K = 1. Conectando la térmica de golpe
+QuickPrint14 tiene el control tensión solo K, con K = 1. Desconectando el contactor de golpe
+QuickPrint15 tiene el control tensión solo K, con K = 1. Conectando el contactor de golpe
+QuickPrint16 tiene el control tensión solo K, con K = 1. Conectando el contactor de golpe
+QuickPrint17 tiene el control tensión solo K, con K = 5. 
+QuickPrint18 tiene el control tensión solo K, con K = 5. 
+QuickPrint19 tiene el control tensión solo K, con K = 5. 
+QuickPrint20 tiene el control tensión solo K, con K = 5. Desconectando el contactor de golpe
+QuickPrint21 tiene el control tensión solo K, con K = 5. Conectando el contactor de golpe
+QuickPrint22 tiene el control tensión solo K, con K = 10. 
+QuickPrint23 tiene el control tensión solo K, con K = 10. Desconectando el contactor de golpe
+
+
+
+

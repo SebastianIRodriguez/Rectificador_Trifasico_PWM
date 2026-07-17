@@ -1,0 +1,22 @@
+Ayer Argentina se impuso con dos tantos contra uno de Inglaterra. 
+La alegría que sentí en ese momento es incomparable, el estado de felicidad más puro por algo que ni siquiera hice yo. Pero ¿podría usted juzgar qué es meritorio de la felicidad y que no lo es? 
+
+
+
+En fin, el día de hoy quería probar el desempeño del control tensión con distintos valores de kp. 
+Recordemos que en el encuentro anterior notamos que el control de tensión P es muy superior en desempeño que el control PI. 
+Probamos para valores de kp 1, 5 y 10. 
+
+En el informe colocar las que van al final. 
+Las gráficas con otros KP u otras variables no utilizadas colocarlas en el anexo.
+
+Quickprint 26 y 27 tienen el escalón de 0 a 40 ohms con carga activa
+Quickprint 28 tienen el escalón de 0 a 40 ohms con trustwothy resistencia
+Quickprint 29 tienen el escalón de 0 a 40 ohms con trustwothy resistencia
+Quickprint 32 tienen la escalera de carga activa, 60 - 50 - 40 - 30 100 ms
+Quickprint 33 tienen la escalera de carga activa, 60 - 50 - 40 - 30 200 ms
+Quickprint 34 tienen la escalera de carga activa, 60 - 50 - 40 200 ms
+Quickprint 34 tienen escalones de resistencia (común) 60 - 30 ohms, Vbus 57.23V, VACÍO 59.2 V
+Quickprint 37 tiene escalón de 0 a 30 ohms, Vbus 57.2 V. 
+Quickprint 37 tiene escalón de 30 a 0 ohms
+
