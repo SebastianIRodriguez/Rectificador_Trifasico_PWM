@@ -1,0 +1,24 @@
+Tensión de fase eficaz: 28V
+Tensión de fase pico: 39.59V
+Tensión de bus = tensión de línea pico: 73.48V
+
+Tensión de Bus buscada: 100V
+2A => 200W. 
+
+Si 3 fases de 28V deben entregar 200W, la corriente es: 2.38A
+
+Acá estamos haciendo pruebas entrando con 28V (30V) de alterna eficaz por fase con un SP de tensión de 80V
+
+QuickPrint1 tiene la evolución global del arranque
+QuickPrint2 tiene la evolución global del arranque
+QuickPrint3 tiene el zoom a la modulación
+QuickPrint4 tiene el zoom a la modulación con 90V de SP
+
+Acá estamos haciendo pruebas entrando con 28V (30V) de alterna eficaz por fase con un SP de tensión de 100V
+QuickPrint5 tiene el zoom del arranque
+QuickPrint6 tiene el zoom de transición 1A -> 2A de salida; Psalida = 186W, Pentrada = 207W 0.9% (si suponemos siempre corriente activa)
+QuickPrint7 tiene el zoom de transición 2A -> 1A de salida
+QuickPrint8 tiene el global de precarga
+QuickPrint9 tiene la transición vacío -> 2A
+QuickPrint10 tiene la transición 2A -> vacío
+
