@@ -1,0 +1,7 @@
+Todo esto fue hecho antes del 28/01/2026. 
+En esta carpeta están las imágenes de las distintas pruebas de PWM del aparato. 
+Principalmente, era para ver que lo que se hizo en protoboard funcione bien en el mundo real
+Entre ellas están:
+	Señales complementarias
+	Deadband 
+	Frecuencia de PWM
