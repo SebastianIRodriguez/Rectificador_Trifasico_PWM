@@ -1,0 +1,11 @@
+Para que el proyecto funcione, se deben incluir los archivos de la libería renolib.
+
+Los archivos .h se añaden <insertar método>
+Los archivos .c se añaden: 
+	Haciendo click derecho en el proyecto desde el explorador de proyectos
+	Click en "Add files" (añadir archivos) 
+	Ir a la carpeta source de renolib y seleccionar los archivos que hagan falta
+	Cuando pregunte si se quieren copiar o linkear los archivos, se elike linkear al entorno PROJECT_LOC
+	El paso anterior hará que los links queden en la carpeta principal del proyecto
+	Se pueden acomodar en una carpeta que se cree a mano simplemente arrastrando cada archivo, el compilador los reconocerá
+	
