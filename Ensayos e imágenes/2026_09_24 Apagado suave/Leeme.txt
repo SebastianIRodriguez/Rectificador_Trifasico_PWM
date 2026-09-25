@@ -1,0 +1,8 @@
+Hoy vine a probar si el código funcionaba después de ordenar un poco las carpetas, pero me engolosiné y terminé implementado un apagado suave para que no dependamos de la parada de emergencia y la usemos verdaderamente para emergencias. 
+
+Hay dos apagados, uno que "no debería hacerse" ya que utiliza a la carga para descargar el bus de CC a cero y otro que se desconecta de la carga y baja el bus hasta la tensión de rectificación (mínima posible), que sería algo más cercano a la vida real. 
+
+Quickprint2 tiene el bus de CC en primer modo de apagado
+Quickprint3 tiene lo mismo pero más cerca
+
+Todo esto quedó implementado en la v4.1.0
