@@ -1,0 +1,58 @@
+# -----------------------------------------------------------------------------
+# Configuracion para el formateador de Clang que usa visual studio 2026
+#
+# Como habilitarlo: Visual Studio 2026 > Tools > Options > All Settings > 
+#                   Languages > C/C++ > Code Style > Formatting > 
+#                   Habilitar la casilla "Enable ClangFormat support"
+#
+# Como ejecutarlo: Presionar y mantener "CTRL", luego hacer click en "k" y luego
+#                  "d".
+# -----------------------------------------------------------------------------
+
+Language: Cpp
+BasedOnStyle: LLVM
+
+# int *variable; (Estilo clásico de C)
+PointerAlignment: Right
+
+# Elimina el límite de caracteres por línea (Evita saltos automáticos no deseados)
+ColumnLimit: 0
+
+# Alinear nombres de variables definidas en columnas
+#
+# int  variable1;
+# char variable2;
+AlignConsecutiveDeclarations: Consecutive
+
+# Alinear asignaciones de valores a variables en columnas
+#
+# variable1 = 23;
+# var2      = 90;
+AlignConsecutiveAssignments: Consecutive
+
+# Desactivar reorganizacion automatica de comentarios
+ReflowComments: false
+
+# Configuracion para especificar donde deben ir las llaves 
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true          # MANTIENE la llave en las funciones
+  AfterControlStatement: Never # MANTIENE la llave arriba en if, for, while, switch
+  AfterStruct: false           # MANTIENE la llave arriba en estructuras (struct)
+  AfterClass: false            # MANTIENE la llave arriba en clases (si usas C++)
+  BeforeElse: true             # BAJA el "else" a una nueva línea independiente: } \n else
+
+# Alinea los defines en la misma columna
+#define BUFFER_SIZE 1024
+#define MAX_USERS   50
+#define VERSION     "1.0.2"
+AlignConsecutiveMacros: Consecutive
+
+# Limitar numero de lineas consecutivas en blanco
+MaxEmptyLinesToKeep: 1
+
+# Cuántos espacios se meten dentro de un bloque (como una función)
+IndentWidth: 4
+
+#Hace que los "case" del "switch" estén una tabulación por delante
+IndentCaseLabels: true
