@@ -17,5 +17,6 @@
 #include "pwm/pwm.h"
 #include "prot/protections.h"
 #include "board/board.h"
+#include "board/gpio.h"
 
 #endif

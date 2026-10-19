@@ -25,13 +25,19 @@
  *
  *   24/09/2026 - v 4.1.0: Se implementa el apagado controlado con
  *                descarga sobre la carga.
+ * 
+ *   16/10/2026 - v 5.0.0: Se emprolija ttodo el sistema de apis, se 
+ *                renombran archivos para mayor coherencia. Todo lo 
+ *                relacionado con texas quedo en la subcarpeta "texas", 
+ *                los metodos de alto nivel quedaron ligados a "project"
+ *                y los metodos de mas bajo nivel estan en "rectifier"
  **********************************************************************/
 
 #ifndef VERSION_H
 #define VERSION_H
 
-#define VERSION_MAYOR 4
-#define VERSION_MINOR 1
+#define VERSION_MAYOR 5
+#define VERSION_MINOR 0
 #define VERSION_PATCH 0
 
 #endif

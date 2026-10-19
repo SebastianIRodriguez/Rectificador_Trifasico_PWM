@@ -13,6 +13,8 @@
 #ifndef ADC_H
 #define ADC_H
 
+#include "adc_calibration.h"
+
 #define ADC_cal_func_ptr (void (*)(void))0x380080
 
 typedef enum {

@@ -12,6 +12,11 @@
 #ifndef TEXAS_TEXAS_H_
 #define TEXAS_TEXAS_H_
 
-extern void DelayUs(Uint16);
+#include "Interrupciones.h"
+
+//extern void DelayUs(Uint16);
+void InitPieCtrl(void);
+void InitSysCtrl(void);
+void InitWatchdog(void);
 
 #endif /* TEXAS_TEXAS_H_ */

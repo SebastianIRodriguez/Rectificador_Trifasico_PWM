@@ -35,51 +35,35 @@
  */
 
 #include "project.h"
-#include "renolib.h"
 
-int habilitar_cdc        = 0;
-int habilitar_cac        = 0;
-int habilitar_ipm        = 0;
-int habilitar_precarga   = 0;
-int encender_convertidor = 0;
+// Variables globales para el control de la bestia
+volatile int main_encender_sistema       = 0; // Enciende todo el sistema, arrancando por la precarga
+volatile int main_stop_without_discharge = 0; // Apaga la maquina sin descargar el bus de CC
+volatile int main_stop_with_discharge    = 0; // Apaga la maquina descargando el bus de CC
 
-int encender_sistema       = 0; // Enciende todo el sistema, arrancando por la precarga
-int stop_without_discharge = 0; // Apaga la maquina sin descargar el bus de CC
-int stop_with_discharge    = 0; // Apaga la maquina descargando el bus de CC
-
+// Variables gloables para el monitoreo del funcionamiento
 int cac_state   = 0;
 int cdc_state   = 0;
 int qac_state   = 0;
 int qdc_state   = 0;
 int relay_state = 0;
 
-// CAC1_CLOSE;
-//  FORCE_TRIPZONE_INTERRUPT;
-
 int main(void)
 {
-    // --- CPU Initializationy
+    // CPU Initialization
     InitSysCtrl();  // Initialize the CPU (FILE: SysCtrl.c)
     gpio_init();    // Initialize the shared GPIO pins (FILE: Gpio.c)
     InitPieCtrl();  // Initialize and enable the PIE (FILE: PieCtrl.c)
     InitWatchdog(); // Initialize the Watchdog Timer (FILE: WatchDog.c)
 
-    // InitTripzone();  // Inicializa la proteccion por trip-zone
-    //pwm4_init(); // Utilizado solo para exteriorizar las variables de control
-
     // Iniciamos el ADC para el muestreo de las tensiones y corrientes RST, ademas del bus de continua
     adc_init(ADC_ALL_SIM_CODE);
 
-    // Inicializamos las macros del proyecto
-    init_interrupts_macros();
-
-    // Inciar los PWM 1, 2 y 3 en formato de modulacion vectorial y habilitamos la interrupcion del ePWM1
-    //InitEPwm123_withInterrupt();
-    //pwm_init123_withInterrupt();
+    // Dentro de esta funcion se inicializa y arranca todo lo relacionado a la maquina
+    project_interrupt_init();
 
     while (1) {
         // Variables utilizadas para control y debug
-
         board_digitalRead(BOARD_CAC1_STATE_PIN, &cac_state);
         board_digitalRead(BOARD_CDC1_STATE_PIN, &cdc_state);
         board_digitalRead(BOARD_QAC1_STATE_PIN, &qac_state);

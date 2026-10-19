@@ -3,10 +3,13 @@
 * Devices: TMS320F2833x
 * Author: Technical Training Organization (TTO), Texas Instruments
 * History:
-*   07/15/08 - original
+*   07/15/08   	- original
+*	16/10/26 	- se elimina la dependencia de project.h
 **********************************************************************/
 
-#include <project.h>						// Main include file
+#include <DSP2833x_Device.h>
+
+extern const struct PIE_VECT_TABLE PieVectTableInit; // PieVectTableInit is always extern
 
 /**********************************************************************
 * Function: InitPieCtrl()

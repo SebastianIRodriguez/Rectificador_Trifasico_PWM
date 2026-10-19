@@ -260,8 +260,8 @@ void gpio_enable_epwm()
  * Retorno:     No posee
  *
  * Descripcion: Modifica el mux para que los GPIOs 0-5 se desvinculen
- *              de los modulos ePWM y actuen como entradas digitales
- *              (alta impedancia)
+ *              de los modulos ePWM y actuen como salidas digitales
+ *              con estado bajo
  **********************************************************************/
 void gpio_disable_epwm()
 {
