@@ -24,6 +24,7 @@
 #define BOARD_CDC1_COMMAND_PIN            32 // Comanda el contactor de CC (grupo B)
 #define BOARD_IPM_COMMAND_PIN             34 // Comanda el rele de IPM (grupo B)
 #define BOARD_CDC1_STATE_PIN              86 // Estado del contactor de CC (grupo C)
+#define BOARD_START_STATE_PIN             84 // Estado del pin de encendido (grupo C)
 #define BOARD_CAC1_COMMAND_PIN            87 // Comanda el cotactor de CA (grupo C)
 
 #define BOARD_CONTACT_CLOSED_LEVEL 0 // Nivel que se mide cuando un contacto esta cerrado

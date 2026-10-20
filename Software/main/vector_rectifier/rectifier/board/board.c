@@ -13,7 +13,7 @@
 #include <DSP2833x_Device.h> // Necesario para las macros de los registros
 #include <stddef.h>
 
-const int valid_pins_count = 11; // Cantidad de pines digitales validos
+const int valid_pins_count = 12; // Cantidad de pines digitales validos
 const int valid_pins[]     = {
     BOARD_GPIO08_COMMAND_PIN,
     BOARD_GPIO09_COMMAND_PIN,
@@ -25,7 +25,8 @@ const int valid_pins[]     = {
     BOARD_CDC1_COMMAND_PIN,
     BOARD_IPM_COMMAND_PIN,
     BOARD_CDC1_STATE_PIN,
-    BOARD_CAC1_COMMAND_PIN};
+    BOARD_CAC1_COMMAND_PIN,
+    BOARD_START_STATE_PIN};
 
 const int command_pins_count = 6; // Cantidad de pines de comando
 const int command_pins[]     = {
@@ -36,13 +37,14 @@ const int command_pins[]     = {
     BOARD_IPM_COMMAND_PIN,
     BOARD_CAC1_COMMAND_PIN};
 
-const int state_pins_count = 5; // Cantidad de pines de estado
+const int state_pins_count = 6; // Cantidad de pines de estado
 const int state_pins[]     = {
     BOARD_PRECHARGE_RELAY_STATE_PIN,
     BOARD_QAC1_STATE_PIN,
     BOARD_QDC1_STATE_PIN,
     BOARD_CAC1_STATE_PIN,
-    BOARD_CDC1_STATE_PIN};
+    BOARD_CDC1_STATE_PIN,
+    BOARD_START_STATE_PIN};
 
 /***********************************************************************
  * board_isValidPin(pin)

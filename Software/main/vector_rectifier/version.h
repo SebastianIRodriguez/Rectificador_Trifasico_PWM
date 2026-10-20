@@ -33,13 +33,16 @@
  *                y los metodos de mas bajo nivel estan en "rectifier"
  * 
  *   19/10/2026 - v 5.0.1: Arreglada la API de pines digitales (board.c)
+ *
+ *   19/10/2026 - v 5.1.0: Agregado el soporte para la lectura del es-
+ *                tado del pin de encendido (GPIO 84)
  **********************************************************************/
 
 #ifndef VERSION_H
 #define VERSION_H
 
 #define VERSION_MAYOR 5
-#define VERSION_MINOR 0
-#define VERSION_PATCH 1
+#define VERSION_MINOR 1
+#define VERSION_PATCH 0
 
 #endif

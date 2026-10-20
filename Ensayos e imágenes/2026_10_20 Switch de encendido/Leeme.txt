@@ -1,0 +1,5 @@
+El día de hoy le agregué al software el soporte para detectar el estado del switch de encendido. 
+La modificación se incluyó en la versión 5.1.0
+Actualmente, lo que permite el "encendido y apagado" es una térmica, pero eso puede cambiarse en cualquier momento. 
+
+La prueba fue muy simple: subir el programa y verificar que el estado se modificaba acorde al estado de la térmica. 
