@@ -31,6 +31,8 @@
  *                relacionado con texas quedo en la subcarpeta "texas", 
  *                los metodos de alto nivel quedaron ligados a "project"
  *                y los metodos de mas bajo nivel estan en "rectifier"
+ * 
+ *   19/10/2026 - v 5.0.1: Arreglada la API de pines digitales (board.c)
  **********************************************************************/
 
 #ifndef VERSION_H
@@ -38,6 +40,6 @@
 
 #define VERSION_MAYOR 5
 #define VERSION_MINOR 0
-#define VERSION_PATCH 0
+#define VERSION_PATCH 1
 
 #endif

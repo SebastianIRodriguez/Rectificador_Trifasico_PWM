@@ -48,6 +48,11 @@ int qac_state   = 0;
 int qdc_state   = 0;
 int relay_state = 0;
 
+int estado_cdc = 1;
+int estado_cac = 1;
+int estado_ipm = 1;
+int estado_relay = 1;
+
 int main(void)
 {
     // CPU Initialization
@@ -67,7 +72,17 @@ int main(void)
         board_digitalRead(BOARD_CAC1_STATE_PIN, &cac_state);
         board_digitalRead(BOARD_CDC1_STATE_PIN, &cdc_state);
         board_digitalRead(BOARD_QAC1_STATE_PIN, &qac_state);
-        board_digitalRead(BOARD_CDC1_STATE_PIN, &qdc_state);
+        board_digitalRead(BOARD_QDC1_STATE_PIN, &qdc_state);
         board_digitalRead(BOARD_PRECHARGE_RELAY_STATE_PIN, &relay_state);
+
+        // GPIO 84 ES EL DE ENCENDIDO, 0 = ENCENDIDO, 1 = APAGADO
+
+        board_digitalWrite(BOARD_CAC1_COMMAND_PIN, estado_cac);
+
+        board_digitalWrite(BOARD_CDC1_COMMAND_PIN, estado_cdc);
+
+        board_digitalWrite(BOARD_IPM_COMMAND_PIN, estado_ipm); //BOARD_PRECHARGE_RELAY_COMMAND_PIN
+
+        board_digitalWrite(BOARD_PRECHARGE_RELAY_COMMAND_PIN, estado_relay); //BOARD_PRECHARGE_RELAY_COMMAND_PIN
     }
 }

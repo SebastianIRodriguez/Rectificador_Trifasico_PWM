@@ -11,6 +11,7 @@
 
 #include "board.h"
 #include <DSP2833x_Device.h> // Necesario para las macros de los registros
+#include <stddef.h>
 
 const int valid_pins_count = 11; // Cantidad de pines digitales validos
 const int valid_pins[]     = {
@@ -129,6 +130,7 @@ int board_isStatePin(int pin)
 int board_digitalWrite(int pin, int state)
 {
     volatile Uint32 *reg;
+    reg = NULL;
 
     if (!board_isCommandPin(pin))
         return -1;
@@ -145,7 +147,8 @@ int board_digitalWrite(int pin, int state)
         pin = pin - 64;
     }
 
-    *reg |= 1 << pin;
+    // Se puede hacer asignación directa, ya que escribir un 0 no hace nada
+    *reg = (1UL << pin);
 
     return 0;
 }
@@ -165,6 +168,7 @@ int board_digitalWrite(int pin, int state)
 int board_digitalRead(int pin, int *state)
 {
     volatile Uint32 *reg;
+    reg = NULL;
 
     if (!board_isValidPin(pin))
         return -1;
@@ -181,7 +185,7 @@ int board_digitalRead(int pin, int *state)
         pin = pin - 64;
     }
 
-    (*state) = (*reg) & (1 << pin);
+    (*state) = 0x00000001 & ((*reg) >> pin);
 
     return 0;
 }
