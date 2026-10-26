@@ -337,7 +337,7 @@ static void pwm4_init()
 void pwm_init123_withInterrupt()
 {
 	static int PERIOD           = PWM_COUNT_PERIOD; // Cuentas para lograr una frecuencia de 10 KHz, antes 7500
-	static int SOC_HALF_TIME    = 240;		        // Estimacion de cuentas para las conversiones analogicas
+	static int SOC_HALF_TIME    = 420;		        // Estimacion de cuentas para las conversiones analogicas
 	disableEPWMClock();					            // Necesario para que esten sincronizados
 
 	// EPWM Module 1 config
@@ -400,9 +400,12 @@ void pwm_init123_withInterrupt()
 	// Run Time (Note: Example execution of one run-time instant)
 	//=========================================================
 	EPwm1Regs.CMPB              = PERIOD - SOC_HALF_TIME;   // Para marcar el inicio de las conversiones analogicas en la mitad del PWM
-	EPwm1Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.6; // DC = 40%
-	EPwm2Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.5; // DC = 50%
-	EPwm3Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.4; // DC = 60%
+	//EPwm1Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.6; // DC = 40%
+	//EPwm2Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.5; // DC = 50%
+	//EPwm3Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.4; // DC = 60%
+    EPwm1Regs.CMPA.half.CMPA    = PERIOD * 0.9; // DC = 10%
+    EPwm2Regs.CMPA.half.CMPA    = PERIOD * 0.5; // DC = 50%
+    EPwm3Regs.CMPA.half.CMPA    = PERIOD * 0.4; // DC = 60%
 
 	// ADC SOCA desde el ePWM1
 	EPwm1Regs.ETPS.bit.SOCAPRD  = 1;	// Genera el SOCA al primer evento
@@ -436,7 +439,9 @@ void pwm_init123_withInterrupt()
 
 	// ******************** Configuracion de interrupción por timer de ePWM1
 	EPwm1Regs.ETSEL.bit.INTEN   = 1;	// habilita interrupcion
-	EPwm1Regs.ETSEL.bit.INTSEL  = 1;    // trigger cuando el timer es cero
+	// Descomentar la siguiente linea y borrar la otra al usar una version superior a la 5.2.0
+	//EPwm1Regs.ETSEL.bit.INTSEL  = 1;    // trigger cuando el timer es cero
+	EPwm1Regs.ETSEL.bit.INTSEL  = 6;    // trigger cuando el timer es igual a CMPB rising 6 = 110 binario
 	EPwm1Regs.ETPS.bit.INTPRD   = 1;	// Dispara al primer evento
 
 	// ******************** Habilitaciones en la matriz de interrupciones
@@ -453,6 +458,139 @@ void pwm_init123_withInterrupt()
 	enableEPWMClock();
 }
 
+/***********************************************************************
+ * pwm_init123_withoutInterrupt()
+ *
+ * Entrada:     No posee
+ *
+ * Salida:      No posee
+ *
+ * Retorno:     No posee
+ *
+ * Descripcion: Funcion identica a pwm_init123_withInterrupt(), solo
+ *              que esta deshabilita la interrupcion por ePWM (xd).
+ *              Ademas, inicializa los ciclos de trabajo de cada EPWM
+ *              para que sean 40%, 50% y 60% respectivamente el 1, 2 y
+ *              3.
+ **********************************************************************/
+void pwm_init123_withoutInterrupt()
+{
+    static int PERIOD           = PWM_COUNT_PERIOD; // Cuentas para lograr una frecuencia de 10 KHz, antes 7500
+    static int SOC_HALF_TIME    = 240;              // Estimacion de cuentas para las conversiones analogicas
+    disableEPWMClock();                             // Necesario para que esten sincronizados
+
+    // EPWM Module 1 config
+    EPwm1Regs.TBPRD                 = PERIOD;           // Period
+    EPwm1Regs.TBPHS.half.TBPHS      = 0;                // Set Phase register to zero (valor en el que arranca la cuenta al recibir un pulso en SYNCI)
+    EPwm1Regs.TBCTL.bit.CTRMODE     = TB_COUNT_UPDOWN;  // Symmetrical mode
+    EPwm1Regs.TBCTL.bit.PHSEN       = TB_DISABLE;       // Master module
+    EPwm1Regs.TBCTL.bit.PRDLD       = TB_SHADOW;
+    EPwm1Regs.TBCTL.bit.SYNCOSEL    = TB_CTR_ZERO;      // Sync down-stream module
+    EPwm1Regs.TBCTL.bit.HSPCLKDIV   = 0;                // Clock sin divisiones
+    EPwm1Regs.CMPCTL.bit.SHDWAMODE  = CC_SHADOW;
+    EPwm1Regs.CMPCTL.bit.SHDWBMODE  = CC_SHADOW;
+    EPwm1Regs.CMPCTL.bit.LOADAMODE  = CC_CTR_ZERO;      // load on CTR=Zero
+    EPwm1Regs.CMPCTL.bit.LOADBMODE  = CC_CTR_ZERO;      // load on CTR=Zero
+    EPwm1Regs.AQCTLA.bit.CAU        = AQ_SET;           // set actions for EPwm4A
+    EPwm1Regs.AQCTLA.bit.CAD        = AQ_CLEAR;
+    EPwm1Regs.DBCTL.bit.OUT_MODE    = DB_FULL_ENABLE;   // enable Dead-band module
+    EPwm1Regs.DBCTL.bit.POLSEL      = DB_ACTV_HIC;      // Active Hi complementary
+    EPwm1Regs.DBFED                 = 50;               // FED = 50 TBCLKs
+    EPwm1Regs.DBRED                 = 50;               // RED = 50 TBCLKs
+
+    // EPWM Module 2 config
+    EPwm2Regs.TBPRD = PERIOD;                           // Period
+    EPwm2Regs.TBPHS.half.TBPHS      = 0;                // Set Phase register to zero
+    EPwm2Regs.TBCTL.bit.CTRMODE     = TB_COUNT_UPDOWN;  // Symmetrical mode
+    EPwm2Regs.TBCTL.bit.PHSEN       = TB_ENABLE;        // Slave module
+    EPwm2Regs.TBCTL.bit.PRDLD       = TB_SHADOW;
+    EPwm2Regs.TBCTL.bit.SYNCOSEL    = TB_SYNC_IN;       // sync flow-through
+    EPwm2Regs.TBCTL.bit.HSPCLKDIV   = 0;
+    EPwm2Regs.CMPCTL.bit.SHDWAMODE  = CC_SHADOW;
+    EPwm2Regs.CMPCTL.bit.SHDWBMODE  = CC_SHADOW;
+    EPwm2Regs.CMPCTL.bit.LOADAMODE  = CC_CTR_ZERO;      // load on CTR=Zero
+    EPwm2Regs.CMPCTL.bit.LOADBMODE  = CC_CTR_ZERO;      // load on CTR=Zero
+    EPwm2Regs.AQCTLA.bit.CAU        = AQ_SET;           // set actions for EPWM5A
+    EPwm2Regs.AQCTLA.bit.CAD        = AQ_CLEAR;
+    EPwm2Regs.DBCTL.bit.OUT_MODE    = DB_FULL_ENABLE;   // enable Dead-band module
+    EPwm2Regs.DBCTL.bit.POLSEL      = DB_ACTV_HIC;      // Active Hi complementary
+    EPwm2Regs.DBFED                 = 50;               // FED = 50 TBCLKs
+    EPwm2Regs.DBRED                 = 50;               // RED = 50 TBCLKs
+
+    // EPWM Module 3 config
+    EPwm3Regs.TBPRD = PERIOD;                           // Period = 1600 TBCLK counts
+    EPwm3Regs.TBPHS.half.TBPHS      = 0;                // Set Phase register to zero
+    EPwm3Regs.TBCTL.bit.CTRMODE     = TB_COUNT_UPDOWN;  // Symmetrical mode
+    EPwm3Regs.TBCTL.bit.PHSEN       = TB_ENABLE;        // Slave module
+    EPwm3Regs.TBCTL.bit.PRDLD       = TB_SHADOW;
+    EPwm3Regs.TBCTL.bit.SYNCOSEL    = TB_SYNC_IN;       // sync flow-through
+    EPwm3Regs.TBCTL.bit.HSPCLKDIV   = 0;
+    EPwm3Regs.CMPCTL.bit.SHDWAMODE  = CC_SHADOW;
+    EPwm3Regs.CMPCTL.bit.SHDWBMODE  = CC_SHADOW;
+    EPwm3Regs.CMPCTL.bit.LOADAMODE  = CC_CTR_ZERO;      // load on CTR=Zero
+    EPwm3Regs.CMPCTL.bit.LOADBMODE  = CC_CTR_ZERO;      // load on CTR=Zero
+    EPwm3Regs.AQCTLA.bit.CAU        = AQ_SET;           // set actions for EPWM3A
+    EPwm3Regs.AQCTLA.bit.CAD        = AQ_CLEAR;
+    EPwm3Regs.DBCTL.bit.OUT_MODE    = DB_FULL_ENABLE;   // enable Dead-band module
+    EPwm3Regs.DBCTL.bit.POLSEL      = DB_ACTV_HIC;      // Active Hi complementary
+    EPwm3Regs.DBFED                 = 50;               // FED = 50 TBCLKs
+    EPwm3Regs.DBRED                 = 50;               // RED = 50 TBCLKs
+
+    // Run Time (Note: Example execution of one run-time instant)
+    //=========================================================
+    EPwm1Regs.CMPB              = PERIOD - SOC_HALF_TIME;   // Para marcar el inicio de las conversiones analogicas en la mitad del PWM
+    EPwm1Regs.CMPA.half.CMPA    = PERIOD * 0.6; // DC = 10%
+    EPwm2Regs.CMPA.half.CMPA    = PERIOD * 0.5; // DC = 50%
+    EPwm3Regs.CMPA.half.CMPA    = PERIOD * 0.4; // DC = 60%
+
+    // ADC SOCA desde el ePWM1
+    EPwm1Regs.ETPS.bit.SOCAPRD  = 1;    // Genera el SOCA al primer evento
+    EPwm1Regs.ETSEL.bit.SOCASEL = 6;    // 110, SOCA on CMPB rising
+    EPwm1Regs.ETSEL.bit.SOCAEN  = 1;    // Habilita el SOCA
+
+
+    asm(" EALLOW"); // Enable EALLOW protected register access
+
+    // ********************************************************* Trip zone ********************************************************* //
+    //EPwm1Regs.TZSEL.bit.OSHT1 = 1;    // TZ1 as one-shot trip event source
+    EPwm1Regs.TZCTL.bit.TZA     = 2;    // Force EPWMxA to a low state
+    EPwm1Regs.TZCTL.bit.TZB     = 2;    // Force EPWMxB to a low state
+    EPwm1Regs.TZEINT.bit.OST    = 1;
+
+    //EPwm2Regs.TZSEL.bit.OSHT1 = 1;    // TZ1 as one-shot trip event source
+    EPwm2Regs.TZCTL.bit.TZA     = 2;    // Force EPWMxA to a low state
+    EPwm2Regs.TZCTL.bit.TZB     = 2;    // Force EPWMxB to a low state
+
+    //EPwm3Regs.TZSEL.bit.OSHT1 = 1;    // TZ1 as one-shot trip event source
+    EPwm3Regs.TZCTL.bit.TZA     = 2;    // Force EPWMxA to a low state
+    EPwm3Regs.TZCTL.bit.TZB     = 2;    // Force EPWMxB to a low state
+
+    EPwm1Regs.TZCLR.bit.OST     = 1;    // Limpiamos la bandera preventivamente
+    EPwm2Regs.TZCLR.bit.OST     = 1;    // Limpiamos la bandera preventivamente
+    EPwm3Regs.TZCLR.bit.OST     = 1;    // Limpiamos la bandera preventivamente
+
+    // ********************************************************* Interrupciones ********************************************************* //
+    //SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 1; // HSPCLK to ePWM modules enabled
+    PieCtrlRegs.PIECTRL.bit.ENPIE = 0;     // Disable the PIE
+
+    // ******************** Configuracion de interrupción por timer de ePWM1
+    EPwm1Regs.ETSEL.bit.INTEN   = 1;    // habilita interrupcion
+    EPwm1Regs.ETSEL.bit.INTSEL  = 1;    // trigger cuando el timer es cero
+    EPwm1Regs.ETPS.bit.INTPRD   = 1;    // Dispara al primer evento
+
+    // ******************** Habilitaciones en la matriz de interrupciones
+    PieCtrlRegs.PIEIER2.bit.INTx1 = 1;     // Habilito la interrupcion del Trip-Zone ePWM1 (PIE group 2)
+    //PieCtrlRegs.PIEIER3.bit.INTx1 = 1;     // Habilito EPWM1_INT (PIE group 3)
+
+    IER |= 0b0010; // Enable INT2 in IER to enable PIE group 1
+    IER |= 0b0100; // Enable INT3 in IER to enable PIE group 2
+
+    PieCtrlRegs.PIECTRL.bit.ENPIE = 1; // Enable the PIE
+    asm(" CLRC INTM");
+    asm(" EDIS"); // Disable EALLOW protected register access
+
+    enableEPWMClock();
+}
 
 /***********************************************************************
  * pwm_init123_withInterrupt_pwm4_debug()

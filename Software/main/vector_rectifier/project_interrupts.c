@@ -79,6 +79,10 @@ int project_interrupt_init()
     gpio_disable_epwm();
 
     pwm_init123_withInterrupt();
+    //pwm_init123_withoutInterrupt();
+
+    // Borrar la siguiente linea en versiones superiores de la 5.2.0
+    gpio_enable_epwm();
 
     project_pll_init();
 
@@ -105,8 +109,8 @@ interrupt void EPWM1_INT_ISR(void) // PIE3.1 @ 0x000D60  EPWM1_INT (EPWM1)
     PieCtrlRegs.PIEACK.all  = PIEACK_GROUP3;         // Must acknowledge the PIE group
     EPwm1Regs.ETCLR.bit.INT = 1;                     // limpiar bandera
 
-    run_interrupt();
-    board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
+    //run_interrupt();
+    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
 }
 
 /***********************************************************************
@@ -150,7 +154,8 @@ static void run_interrupt()
 #endif
 
     // ******************** PROTECCIONES  ******************** //
-    PROTECTION_MACRO(ac_magn.v.a, ac_magn.v.b, ac_magn.v.c, vbus, ac_magn.i.a, ac_magn.i.b, ac_magn.i.c);
+    // Descomentar la siguiente linea en versiones superiores a la 5.2.0
+    //PROTECTION_MACRO(ac_magn.v.a, ac_magn.v.b, ac_magn.v.c, vbus, ac_magn.i.a, ac_magn.i.b, ac_magn.i.c);
 
     // ******************** TRIP ZONE  ******************** //
     if (GpioDataRegs.GPADAT.bit.GPIO12 == 0)
@@ -208,7 +213,8 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
             board_openContact(BOARD_PRECHARGE_RELAY_COMMAND_PIN);
             if (f_idle == 0) {
                 f_idle = 1;
-                gpio_disable_epwm();
+                // Descomentar la siguiente linea en versiones superiores de la 5.2.0
+                //gpio_disable_epwm();
             }
 
             if (encender_sistema) {

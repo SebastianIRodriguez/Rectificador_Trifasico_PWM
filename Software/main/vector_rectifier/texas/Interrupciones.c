@@ -276,10 +276,11 @@ typedef struct
 //---------------------------------------------------------------------
 interrupt void ADCINT_ISR(void) // PIE1.6 @ 0x000D4A  ADCINT (ADC)
 {
-	GpioDataRegs.GPATOGGLE.bit.GPIO18 = 1;	// Se hace un toggle del pin 18
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1; // Must acknowledge the PIE group
-	AdcRegs.ADCTRL2.bit.RST_SEQ1 = 1;		// Reset SEQ1 to CONV00 state
+	//AdcRegs.ADCTRL2.bit.RST_SEQ1 = 1;		// Reset SEQ1 to CONV00 state
 	AdcRegs.ADCST.bit.INT_SEQ1_CLR = 1;		// Clear ADC SEQ1 interrupt flag
+
+	board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0);
 
 
 	// GpioDataRegs.GPATOGGLE.bit.GPIO18 = 1; // Se hace un toggle del pin 18

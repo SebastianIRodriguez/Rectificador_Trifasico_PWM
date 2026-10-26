@@ -35,7 +35,8 @@ static void adc6();
  *
  * Retorno:     0 si se ingreso un codigo valido, -1 caso contrario
  *
- * Descripcion: Salva un array de elementos
+ * Descripcion: Inicializa el modulo ADC con un comportamiento deter-
+ *              minado.
  **********************************************************************/
 int adc_init(int config_code)
 {
@@ -312,8 +313,8 @@ static void adc5()
 
 	DelayUs(5000); // Wait 5ms before using the ADC
 
-	// ***** Indicamos la cantidad de conversiones analÃ³gicas que se realizarÃ¡n por secuencia
-	AdcRegs.ADCMAXCONV.all = 0x0003;
+	// ***** Indicamos la cantidad de conversiones analogicas que se realizaran por secuencia
+	AdcRegs.ADCMAXCONV.all = 0x0007;
 	// bit 15-7      0's:    reserved
 	// bit 6-4       000:    MAX_CONV2 value
 	// bit 3-0       0000:   MAX_CONV1 value (0 means 1 conversion)
@@ -341,7 +342,7 @@ static void adc5()
 	// bit 3-0       0000:   reserved
 	AdcRegs.ADCTRL1.bit.ACQ_PS = 3; // (3 + 1) x ADCCLK
 
-	// ********************* ACÃ� SE CONFIGURA LA FUENTE DE SOC
+	// ********************* ACA SE CONFIGURA LA FUENTE DE SOC
 	AdcRegs.ADCTRL2.all = 0x0900;
 	// bit 15        0:      ePWM_SOCB_SEQ, 0=no action
 	// bit 14        0:      RST_SEQ1, 0=no action
@@ -414,7 +415,7 @@ static void adc6()
 	DelayUs(5000); // Wait 5ms before using the ADC
 
 	// ***** Indicamos la cantidad de conversiones analogicas que se realizaran por secuencia
-	AdcRegs.ADCMAXCONV.all = 0x0007;
+	AdcRegs.ADCMAXCONV.all = 0x0007; //7
 	// bit 15-7      0's:    reserved
 	// bit 6-4       000:    MAX_CONV2 value
 	// bit 3-0       0000:   MAX_CONV1 value (0 means 1 conversion)
@@ -459,5 +460,9 @@ static void adc6()
 	// bit 1         0:      reserved
 	// bit 0         0:      ePWM_SOCB_SEQ2, 0=no action
 
+	// Borrar las siguientes lineas en versiones superiores a la 5.2.0
+    //--- Enable the ADC interrupt
+    PieCtrlRegs.PIEIER1.bit.INTx6 = 1; // Enable ADCINT in PIE group 1
+    IER |= 0x0001;                     // Enable INT1 in IER to enable PIE group
 }
 //--- end of file -----------------------------------------------------

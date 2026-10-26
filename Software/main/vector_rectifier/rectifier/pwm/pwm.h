@@ -15,6 +15,7 @@
 #define PWM_COUNT_PERIOD 7500.0 // Semi-periodo en cuentas necesario para generar una senal de 10 KHz con 150 MHz de clock base
 
 void pwm_init123_withInterrupt();
+void pwm_init123_withoutInterrupt();
 void pwm_init123_withInterrupt_pwm4_debug();
 
 #endif

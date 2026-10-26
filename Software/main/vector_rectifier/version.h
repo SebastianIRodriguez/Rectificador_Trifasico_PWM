@@ -36,13 +36,18 @@
  *
  *   19/10/2026 - v 5.1.0: Agregado el soporte para la lectura del es-
  *                tado del pin de encendido (GPIO 84)
+ *
+ *   20/10/2026 - v 5.2.0: Se implementa la funcion
+ *                pwm_init123_withoutInterrupt() utilizada para pruebas
+ *                Se modifica temporalmente el funcionamiento del sis-
+ *                tema para realizar pruebas sobre los tiempos del ADC.
  **********************************************************************/
 
 #ifndef VERSION_H
 #define VERSION_H
 
 #define VERSION_MAYOR 5
-#define VERSION_MINOR 1
+#define VERSION_MINOR 2
 #define VERSION_PATCH 0
 
 #endif
