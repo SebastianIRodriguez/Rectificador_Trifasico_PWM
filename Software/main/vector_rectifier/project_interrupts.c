@@ -105,12 +105,15 @@ int project_interrupt_init()
 
 interrupt void EPWM1_INT_ISR(void) // PIE3.1 @ 0x000D60  EPWM1_INT (EPWM1)
 {
-    board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
+    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
     PieCtrlRegs.PIEACK.all  = PIEACK_GROUP3;         // Must acknowledge the PIE group
     EPwm1Regs.ETCLR.bit.INT = 1;                     // limpiar bandera
 
+    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
+    GpioDataRegs.GPASET.bit.GPIO8 = 1;
+
     //run_interrupt();
-    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
+   //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
 }
 
 /***********************************************************************

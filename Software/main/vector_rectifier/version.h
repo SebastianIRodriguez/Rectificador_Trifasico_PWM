@@ -41,13 +41,17 @@
  *                pwm_init123_withoutInterrupt() utilizada para pruebas
  *                Se modifica temporalmente el funcionamiento del sis-
  *                tema para realizar pruebas sobre los tiempos del ADC.
+ *
+ *   26/10/2026 - v 5.3.0: Se cambia la inicializacion de adc6. Ahora
+ *                ADCCLKPS es 25 MHz, se cambio ACQ_PS a 7 para que el
+ *                el ts+h siga siendo de 320ns
  **********************************************************************/
 
 #ifndef VERSION_H
 #define VERSION_H
 
 #define VERSION_MAYOR 5
-#define VERSION_MINOR 2
+#define VERSION_MINOR 3
 #define VERSION_PATCH 0
 
 #endif

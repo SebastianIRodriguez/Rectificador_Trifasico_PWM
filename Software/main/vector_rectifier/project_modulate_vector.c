@@ -13,6 +13,8 @@
 #include <math.h>
 #include "project.h"
 
+#define MAX_I_MOD 0.9 // Indice de modulacion maximo
+
 /***********************************************************************
  * project_modulate_vector()
  *
@@ -35,8 +37,9 @@ int project_modulate_vector(float u, float theta, float Vbus)
     float Ts = 1 / PROJECT_F_PWM; // Siempre que Fs sea 10 kHz
     float fase_rel;               // Fase relativa del vector rotante dentro del sextante
     int   sext;                   // Sextante en el cual se encuentra el vector rotante
-    float ta, tb, t0;             // Tiempos utilizados en la modulación vectorial
-    float t_pwm1, t_pwm2, t_pwm3; // Tiempos que deben permanecer en alto cada uno de los PWMs para la reproducción del vector
+    float ta, tb, t0;             // Tiempos utilizados en la modulacion vectorial
+    float t_pwm1, t_pwm2, t_pwm3; // Tiempos que deben permanecer en alto cada uno de los PWMs para la reproduccion del vector
+    float imod;                   // Modulo efectivo del vector, se satura en 1 para que no sobre module o se calculen tiempos negativos
 
     // Ajustamos la fase a un numero comprendido entre 0 y 2pi
     fase = theta;
@@ -46,10 +49,11 @@ int project_modulate_vector(float u, float theta, float Vbus)
     fase_rel = fmod(fase, M_PI / 3);
     sext     = (int)ceil(fase / (M_PI / 3));
 
-    // Calculamos los tiempos de la modulacion vectorial
-    float imod = (sqrt(3) * u) / E;
-    imod       = imod > 1 ? 1 : imod;
+    // Indice de modulacion (revisar que lo sea)
+    imod = (sqrt(3) * u) / E;
+    imod = imod > MAX_I_MOD ? MAX_I_MOD : imod;
 
+    // Calculamos los tiempos de la modulacion vectorial
     ta = imod * Ts * sin(M_PI / 3 - fase_rel);
     tb = imod * Ts * sin(fase_rel);
     t0 = Ts - ta - tb;

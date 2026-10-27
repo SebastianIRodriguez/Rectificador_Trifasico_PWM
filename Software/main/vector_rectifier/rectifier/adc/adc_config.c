@@ -405,12 +405,20 @@ static void adc6()
 	AdcRegs.ADCREFSEL.bit.REF_SEL = 0; // 0=internal, 1=external
 
 	//--- Power-up the ADC
+	AdcRegs.ADCTRL3.bit.ADCBGRFDN = 0b11;   // bit 7-6       11:     ADCBGRFDN, reference power, 00=off, 11=on
+	AdcRegs.ADCTRL3.bit.ADCPWDN   = 1;      // bit 5         1:      ADCPWDN, main ADC power, 0=off, 1=on
+	AdcRegs.ADCTRL3.bit.ADCCLKPS  = 3;      // bit 4-1       0011:   ADCCLKPS, clock prescaler, FCLK=HSPCLK/(2*ADCCLKPS) -> FCLK = 150 MHz/2*3 = 25 MHz (T = 40 ns)
+	AdcRegs.ADCTRL3.bit.SMODE_SEL = 1;      // bit 0         1:      SMODE_SEL, 0=sequential sampling, 1=simultaneous sampling
+
+	/*
 	AdcRegs.ADCTRL3.all = 0x00ED; // Power-up reference and main ADC
 								  // bit 15-8      0's:    reserved
 								  // bit 7-6       11:     ADCBGRFDN, reference power, 00=off, 11=on
 								  // bit 5         1:      ADCPWDN, main ADC power, 0=off, 1=on
-								  // bit 4-1       0110:   ADCCLKPS, clock prescaler, FCLK=HSPCLK/(2*ADCCLKPS) -> FCLK = 25 MHz/2*6 = 2.08333 MHz
-								  // bit 0         1:      SMODE_SEL, 0=sequential sampling, 1=simultaneous sampling //11101100
+								  // bit 4-1       0110:   ADCCLKPS, clock prescaler, FCLK=HSPCLK/(2*ADCCLKPS) -> FCLK = 25 MHz/2*6 = 2.08333 MHz (T = 480 ns)
+	                              // bit 4-1       0110:   ADCCLKPS, clock prescaler, FCLK=HSPCLK/(2*ADCCLKPS) -> FCLK = 150 MHz/2*6 = 12.5 MHz (T = 80 ns)
+	                              // bit 0         1:      SMODE_SEL, 0=sequential sampling, 1=simultaneous sampling //11101100
+	*/
 
 	DelayUs(5000); // Wait 5ms before using the ADC
 
@@ -430,7 +438,8 @@ static void adc6()
 	AdcRegs.ADCCHSELSEQ2.bit.CONV06 = 6; // Convert Channel 6
 	AdcRegs.ADCCHSELSEQ2.bit.CONV07 = 7; // Convert Channel 7
 
-	AdcRegs.ADCTRL1.all = 0x0710;
+	// ADCTRL1[7]
+	//AdcRegs.ADCTRL1.all = 0x0710; // = 0111 0001 0000
 	// bit 15        0:      reserved
 	// bit 14        0:      RESET, 0=no action, 1=reset ADC
 	// bit 13-12     00:     SUSMOD, 00=ignore emulation suspend
@@ -440,7 +449,16 @@ static void adc6()
 	// bit 5         0:      SEQ_OVRD, 0=disabled, 1=enabled
 	// bit 4         1:      SEQ_CASC, 0=dual sequencer, 1=cascaded sequencer
 	// bit 3-0       0000:   reserved
-	AdcRegs.ADCTRL1.bit.ACQ_PS = 3; // (3 + 1) x ADCCLK, antes 3
+
+	// bit 15        0:      reserved
+	AdcRegs.ADCTRL1.bit.RESET    = 0;   // bit 14    RESET, 0=no action, 1=reset ADC
+	AdcRegs.ADCTRL1.bit.SUSMOD   = 0;   // bit 13-12 SUSMOD, 00=ignore emulation suspend
+	AdcRegs.ADCTRL1.bit.ACQ_PS   = 3;   // bit 11-8  ACQ_PS (Acquisition) (7 + 1) = 8 x ADCCLK
+	AdcRegs.ADCTRL1.bit.CPS      = 0;   // bit 7     CPS (Core clock), 0: ADCCLK=FCLK/1, 1: ADCCLK=FCLK/2
+	AdcRegs.ADCTRL1.bit.CONT_RUN = 0;   // bit 6     CONT_RUN, 0=start/stop mode, 1=continuous run
+	AdcRegs.ADCTRL1.bit.SEQ_OVRD = 0;   // bit 5     SEQ_OVRD, 0=disabled, 1=enabled
+	AdcRegs.ADCTRL1.bit.SEQ_CASC = 1;   // bit 4     SEQ_CASC, 0=dual sequencer, 1=cascaded sequencer
+	// bit 3-0       0000:   reserved
 
 	AdcRegs.ADCTRL2.all = 0x0900;
 	// bit 15        0:      ePWM_SOCB_SEQ, 0=no action

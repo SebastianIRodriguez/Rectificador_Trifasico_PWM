@@ -337,7 +337,7 @@ static void pwm4_init()
 void pwm_init123_withInterrupt()
 {
 	static int PERIOD           = PWM_COUNT_PERIOD; // Cuentas para lograr una frecuencia de 10 KHz, antes 7500
-	static int SOC_HALF_TIME    = 420;		        // Estimacion de cuentas para las conversiones analogicas
+	static int SOC_HALF_TIME    = 144;		        // Estimacion de cuentas para las conversiones analogicas antes 420
 	disableEPWMClock();					            // Necesario para que esten sincronizados
 
 	// EPWM Module 1 config
@@ -403,7 +403,7 @@ void pwm_init123_withInterrupt()
 	//EPwm1Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.6; // DC = 40%
 	//EPwm2Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.5; // DC = 50%
 	//EPwm3Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.4; // DC = 60%
-    EPwm1Regs.CMPA.half.CMPA    = PERIOD * 0.9; // DC = 10%
+    EPwm1Regs.CMPA.half.CMPA    = PERIOD * 0.95; // DC = 5% (5us)
     EPwm2Regs.CMPA.half.CMPA    = PERIOD * 0.5; // DC = 50%
     EPwm3Regs.CMPA.half.CMPA    = PERIOD * 0.4; // DC = 60%
 
