@@ -20,10 +20,25 @@
 #define KP_CONTROL_V 1.0
 #define KI_CONTROL_V 0.0
 
-#define UPPER_I_SAT 5  // Maximo valor positivo de la salida del control corriente
-#define LOW_I_SAT   -5 // Maximo valor negativo de la salida del control corriente
-#define UPPER_I_WUL 6  // Maximo valor positivo del error integral acumulado del control corriente
-#define LOW_I_WUL   -6 // Maximo valor negativo de la salida del control corriente
+//----------------------------------------------------------------------
+// Valores de saturacion del control corriente.
+// Recomendacion de Luciano: dada la velicidad de actuacion del control
+// corriente (Ki elevado) se requiere un amplio rango de accion. Esto 
+// quiere decir que, durante breves instantes, el contorl debe tener
+// la potestad de generar valores altos (o bajos) en la salida vectorial
+// como limite maximo, la saturacion de la salida debe ser menor a la 
+// tension de pico de la entrada (ej, si la entrada es de 10Vpico, los 
+// limites teoricos maximos son de +-10).
+// Desde las pruebas realizadas, recomiendo usar como saturacion el 50%
+// del valor de pico aproximadamente. 
+// No pude establecer un criterio adecuado para el valor de windup, la 
+// tería dice que con un valor igual al de saturacion de salida deberia
+// bastar, pero obtuve mejores resultados con este siendo 5 veces mayor
+//
+#define UPPER_I_SAT 20   // Maximo valor positivo de la salida del control corriente
+#define LOW_I_SAT   -20  // Maximo valor negativo de la salida del control corriente
+#define UPPER_I_WUL 100  // Maximo valor positivo del error integral acumulado del control corriente
+#define LOW_I_WUL   -100 // Maximo valor negativo de la salida del control corriente
 
 static PARK            i_park;
 static PARK            v_park;
@@ -83,7 +98,11 @@ void project_control_init()
  *
  * Descripcion: Ejecuta el esquema de control del rectificador
  **********************************************************************/
-void project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica, float vbus, float vsp, ROTATING_VECTOR *out)
+extern float           main_id;
+extern PARK            main_v_park;
+extern PARK            main_v_park_out;
+extern E_PI_CONTROLLER main_pi_id;
+void                   project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica, float vbus, float vsp, ROTATING_VECTOR *out)
 {
     float w;
     float mod_out;
@@ -94,7 +113,7 @@ void project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica,
     float iqsp = 0;
 
     // Frecuencia angular
-    w = 2 * M_PI * red_trifasica.f;
+    w = TWO_PI * red_trifasica.f;
 
     // CLARKE
     v_clarke.a = v.a;
@@ -130,12 +149,18 @@ void project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica,
     // Control tension (proporcional)
     pi_vbus.sp = vsp;
     pi_vbus.fb = vbus;
-    //pi_vbus.Kp = kp_control_v;
+    pi_vbus.Kp = KP_CONTROL_V;
     pi_vbus.Ki = 0;
     PI_CONTROLLER_MACRO(pi_vbus);
 
     // Control corriente (P+I)
     idsp = vbus * (1 / v_park.d) * pi_vbus.out * (-2.0 / 3.0);
+    if (idsp > 5.0)
+        idsp = 5.0;
+    else if (idsp < -5.0)
+        idsp = -5.0;
+
+    main_id = idsp;
 
     // Rama superior
     pi_id.sp = idsp;
@@ -143,7 +168,10 @@ void project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica,
     pi_id.Kp = KP_CONTROL_I;
     pi_id.Ki = KI_CONTROL_I;
     E_PI_CONTROLLER_MACRO(pi_id);
-    v_park_out.d = v_park.d + pi_id.out - I_FF_ENABLED * i_park.q * w * L;
+    main_pi_id      = pi_id;
+    v_park_out.d    = v_park.d + pi_id.out - I_FF_ENABLED * i_park.q * w * L;
+    main_v_park     = v_park;
+    main_v_park_out = v_park_out;
 
     // Rama inferior
     pi_iq.sp = iqsp;
@@ -151,6 +179,7 @@ void project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica,
     pi_iq.Kp = KP_CONTROL_I;
     pi_iq.Ki = KI_CONTROL_I;
     E_PI_CONTROLLER_MACRO(pi_iq);
+
     v_park_out.q = v_park.q + pi_iq.out + I_FF_ENABLED * i_park.d * w * L;
 
     mod_out = sqrt(v_park_out.d * v_park_out.d + v_park_out.q * v_park_out.q);
@@ -158,8 +187,8 @@ void project_control_run(SIGNAL_3Magn v, SIGNAL_3Magn i, PLL_VARS red_trifasica,
     // ******************** Antitransformadas
 
     // ***** PARK
-    v_park_out.cos = cos(red_trifasica.theta);
-    v_park_out.sin = sin(red_trifasica.theta);
+    v_park_out.cos = coseno; //cos(red_trifasica.theta);
+    v_park_out.sin = seno;   //sin(red_trifasica.theta);
     iPARK_MACRO(v_park_out);
 
     // ***** Clarke

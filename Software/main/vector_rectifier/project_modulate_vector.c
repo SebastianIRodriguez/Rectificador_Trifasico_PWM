@@ -10,10 +10,15 @@
  *   16/10/2026 - cambio de nombre de las funciones por coherencia
  **********************************************************************/
 
-#include <math.h>
 #include "project.h"
+#include <math.h>
 
 #define MAX_I_MOD 0.9 // Indice de modulacion maximo
+
+// Variable utilizada para debug
+extern float main_imod;
+
+static float Ts = 1 / PROJECT_F_PWM;
 
 /***********************************************************************
  * project_modulate_vector()
@@ -32,29 +37,32 @@
  **********************************************************************/
 int project_modulate_vector(float u, float theta, float Vbus)
 {
-    float E = Vbus;               // Tension del bus de continua
     float fase;                   // Variable auxiliar para calcular la fase del vector rotante
-    float Ts = 1 / PROJECT_F_PWM; // Siempre que Fs sea 10 kHz
     float fase_rel;               // Fase relativa del vector rotante dentro del sextante
     int   sext;                   // Sextante en el cual se encuentra el vector rotante
     float ta, tb, t0;             // Tiempos utilizados en la modulacion vectorial
     float t_pwm1, t_pwm2, t_pwm3; // Tiempos que deben permanecer en alto cada uno de los PWMs para la reproduccion del vector
     float imod;                   // Modulo efectivo del vector, se satura en 1 para que no sobre module o se calculen tiempos negativos
 
+    // Verificaciones
+    Vbus = Vbus < 1 ? Vbus : 1;
+    u    = u < 0 ? u : 0;
+
     // Ajustamos la fase a un numero comprendido entre 0 y 2pi
     fase = theta;
-    fase = fmod(fase, 2 * M_PI);
+    fase = fmod(fase, TWO_PI);
 
     // Calculamos el sextante en el que se encuentra el vector junto con su fase relativa dentro del mismo
-    fase_rel = fmod(fase, M_PI / 3);
-    sext     = (int)ceil(fase / (M_PI / 3));
+    fase_rel = fmod(fase, ONE_THIRD_PI);
+    sext     = (int)ceil(fase / ONE_THIRD_PI);
 
     // Indice de modulacion (revisar que lo sea)
-    imod = (sqrt(3) * u) / E;
-    imod = imod > MAX_I_MOD ? MAX_I_MOD : imod;
+    imod      = (sqrt(3) * u) / Vbus;
+    imod      = (imod > MAX_I_MOD) ? MAX_I_MOD : imod;
+    main_imod = imod;
 
     // Calculamos los tiempos de la modulacion vectorial
-    ta = imod * Ts * sin(M_PI / 3 - fase_rel);
+    ta = imod * Ts * sin(ONE_THIRD_PI - fase_rel);
     tb = imod * Ts * sin(fase_rel);
     t0 = Ts - ta - tb;
 

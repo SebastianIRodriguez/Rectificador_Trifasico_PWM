@@ -46,17 +46,19 @@
  *                ADCCLKPS es 25 MHz, se cambio ACQ_PS a 7 para que el
  *                el ts+h siga siendo de 320ns
  *
- *   31/10/2026 - v 5.4.0: Se crea la inicializacion adc7. La misma
+ *   31/10/2026 - v 5.4.0: Se crea la inicialización adc7. La misma
  *                solo adquiere las variables utiles para el rectifica-
- *                dor (corrientes y tensiones RST y tension de bus des-
+ *                dor (corrientes y tensiones RST y tensión de bus des-
  *                de el diferencial Y).
+ *
+ *   04/11/2026 - v 5.5.0: Se deja nuevamente funcional al convertidor
  **********************************************************************/
 
 #ifndef VERSION_H
 #define VERSION_H
 
 #define VERSION_MAYOR 5
-#define VERSION_MINOR 4
+#define VERSION_MINOR 5
 #define VERSION_PATCH 0
 
 #endif

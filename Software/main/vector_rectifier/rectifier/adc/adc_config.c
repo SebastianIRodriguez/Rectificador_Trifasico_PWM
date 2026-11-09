@@ -540,6 +540,7 @@ static void adc7()
 
     // ***** Asignamos los canales de conversion al secuenciador, dos muestreos a cada senal
     // ***** Primera rafaga de 7 canales (Muestreo 1)
+    /*
     AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 6;  // Rv (ADCINA6) -> Resultado en ADCRESULT0
     AdcRegs.ADCCHSELSEQ1.bit.CONV01 = 13; // Ri (ADCINB5) -> Resultado en ADCRESULT1
     AdcRegs.ADCCHSELSEQ1.bit.CONV02 = 7;  // Sv (ADCINA7) -> Resultado en ADCRESULT2
@@ -556,6 +557,25 @@ static void adc7()
     AdcRegs.ADCCHSELSEQ3.bit.CONV11 = 15; // Tv (ADCINB7) -> Resultado en ADCRESULT11
     AdcRegs.ADCCHSELSEQ4.bit.CONV12 = 11; // Ti (ADCINB3) -> Resultado en ADCRESULT12
     AdcRegs.ADCCHSELSEQ4.bit.CONV13 = 4;  // Yv (ADCINA4) -> Resultado en ADCRESULT13
+    */
+
+    // ***** Primera ráfaga de 7 canales (Muestreo 1) - CON INVERSIÓN DE LADO
+    AdcRegs.ADCCHSELSEQ1.bit.CONV00 = 14; // Antes 6  (Ahora ADCINB6 - Rv)
+    AdcRegs.ADCCHSELSEQ1.bit.CONV01 = 5;  // Antes 13 (Ahora ADCINA5 - Ri)
+    AdcRegs.ADCCHSELSEQ1.bit.CONV02 = 15; // Antes 7  (Ahora ADCINB7 - Sv)
+    AdcRegs.ADCCHSELSEQ1.bit.CONV03 = 4;  // Antes 12 (Ahora ADCINA4 - Si)
+    AdcRegs.ADCCHSELSEQ2.bit.CONV04 = 7;  // Antes 15 (Ahora ADCINA7 - Tv)
+    AdcRegs.ADCCHSELSEQ2.bit.CONV05 = 3;  // Antes 11 (Ahora ADCINA3 - Ti)
+    AdcRegs.ADCCHSELSEQ2.bit.CONV06 = 12; // Antes 4  (Ahora ADCINB4 - Yv / Vbus)
+
+    // ***** Segunda ráfaga de los mismos 7 canales (Muestreo 2) - CON INVERSIÓN DE LADO
+    AdcRegs.ADCCHSELSEQ2.bit.CONV07 = 14; // Antes 6  (Ahora ADCINB6 - Rv)
+    AdcRegs.ADCCHSELSEQ3.bit.CONV08 = 5;  // Antes 13 (Ahora ADCINA5 - Ri)
+    AdcRegs.ADCCHSELSEQ3.bit.CONV09 = 15; // Antes 7  (Ahora ADCINB7 - Sv)
+    AdcRegs.ADCCHSELSEQ3.bit.CONV10 = 4;  // Antes 12 (Ahora ADCINA4 - Si)
+    AdcRegs.ADCCHSELSEQ3.bit.CONV11 = 7;  // Antes 15 (Ahora ADCINA7 - Tv)
+    AdcRegs.ADCCHSELSEQ4.bit.CONV12 = 3;  // Antes 11 (Ahora ADCINA3 - Ti)
+    AdcRegs.ADCCHSELSEQ4.bit.CONV13 = 12; // Antes 4  (Ahora ADCINB4 - Yv / Vbus)
 
     // ***** ADCTRL1
     // bit 15        0:      reserved
@@ -585,10 +605,5 @@ static void adc7()
     // bit 2         0:      INT_MOD_SEQ2, 0=int on every other SEQ2 conv
     // bit 1         0:      reserved
     // bit 0         0:      ePWM_SOCB_SEQ2, 0=no action
-
-    // Borrar las siguientes lineas en versiones superiores a la 5.3.0
-    //--- Enable the ADC interrupt
-    PieCtrlRegs.PIEIER1.bit.INTx6 = 1; // Enable ADCINT in PIE group 1
-    IER |= 0x0001;                     // Enable INT1 in IER to enable PIE group
 }
 //--- end of file -----------------------------------------------------

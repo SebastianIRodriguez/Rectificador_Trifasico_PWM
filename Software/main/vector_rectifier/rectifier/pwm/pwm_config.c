@@ -379,7 +379,7 @@ void pwm_init123_withInterrupt()
 	EPwm2Regs.DBRED                 = 50;			    // RED = 50 TBCLKs
 
 	// EPWM Module 3 config
-	EPwm3Regs.TBPRD = PERIOD;					        // Period = 1600 TBCLK counts
+	EPwm3Regs.TBPRD = PERIOD;					        // Period
 	EPwm3Regs.TBPHS.half.TBPHS      = 0;				// Set Phase register to zero
 	EPwm3Regs.TBCTL.bit.CTRMODE     = TB_COUNT_UPDOWN;  // Symmetrical mode
 	EPwm3Regs.TBCTL.bit.PHSEN       = TB_ENABLE;		// Slave module
@@ -400,12 +400,12 @@ void pwm_init123_withInterrupt()
 	// Run Time (Note: Example execution of one run-time instant)
 	//=========================================================
 	EPwm1Regs.CMPB              = PERIOD - SOC_HALF_TIME;   // Para marcar el inicio de las conversiones analogicas en la mitad del PWM
-	//EPwm1Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.6; // DC = 40%
-	//EPwm2Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.5; // DC = 50%
-	//EPwm3Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.4; // DC = 60%
-    EPwm1Regs.CMPA.half.CMPA    = PERIOD * 0.95; // DC = 5% (5us)
-    EPwm2Regs.CMPA.half.CMPA    = PERIOD * 0.5; // DC = 50%
-    EPwm3Regs.CMPA.half.CMPA    = PERIOD * 0.4; // DC = 60%
+	EPwm1Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.6; // DC = 40%
+	EPwm2Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.5; // DC = 50%
+	EPwm3Regs.CMPA.half.CMPA    = PERIOD;                   // * 0.4; // DC = 60%
+    //EPwm1Regs.CMPA.half.CMPA    = PERIOD * 0.95; // DC = 5% (5us)
+    //EPwm2Regs.CMPA.half.CMPA    = PERIOD * 0.5; // DC = 50%
+    //EPwm3Regs.CMPA.half.CMPA    = PERIOD * 0.4; // DC = 60%
 
 	// ADC SOCA desde el ePWM1
 	EPwm1Regs.ETPS.bit.SOCAPRD  = 1;	// Genera el SOCA al primer evento
@@ -440,8 +440,8 @@ void pwm_init123_withInterrupt()
 	// ******************** Configuracion de interrupción por timer de ePWM1
 	EPwm1Regs.ETSEL.bit.INTEN   = 1;	// habilita interrupcion
 	// Descomentar la siguiente linea y borrar la otra al usar una version superior a la 5.2.0
-	//EPwm1Regs.ETSEL.bit.INTSEL  = 1;    // trigger cuando el timer es cero
-	EPwm1Regs.ETSEL.bit.INTSEL  = 6;    // trigger cuando el timer es igual a CMPB rising 6 = 110 binario
+	EPwm1Regs.ETSEL.bit.INTSEL  = 1;    // trigger cuando el timer es cero
+	//EPwm1Regs.ETSEL.bit.INTSEL  = 6;    // trigger cuando el timer es igual a CMPB rising 6 = 110 binario
 	EPwm1Regs.ETPS.bit.INTPRD   = 1;	// Dispara al primer evento
 
 	// ******************** Habilitaciones en la matriz de interrupciones
@@ -518,7 +518,7 @@ void pwm_init123_withoutInterrupt()
     EPwm2Regs.DBRED                 = 50;               // RED = 50 TBCLKs
 
     // EPWM Module 3 config
-    EPwm3Regs.TBPRD = PERIOD;                           // Period = 1600 TBCLK counts
+    EPwm3Regs.TBPRD = PERIOD;                           // Period
     EPwm3Regs.TBPHS.half.TBPHS      = 0;                // Set Phase register to zero
     EPwm3Regs.TBCTL.bit.CTRMODE     = TB_COUNT_UPDOWN;  // Symmetrical mode
     EPwm3Regs.TBCTL.bit.PHSEN       = TB_ENABLE;        // Slave module

@@ -276,7 +276,7 @@ typedef struct
 //---------------------------------------------------------------------
 interrupt void ADCINT_ISR(void) // PIE1.6 @ 0x000D4A  ADCINT (ADC)
 {
-    GpioDataRegs.GPACLEAR.bit.GPIO8 = 1;
+    //GpioDataRegs.GPACLEAR.bit.GPIO8 = 1;
     //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0);
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1; // Must acknowledge the PIE group
 	//AdcRegs.ADCTRL2.bit.RST_SEQ1 = 1;		// Reset SEQ1 to CONV00 state

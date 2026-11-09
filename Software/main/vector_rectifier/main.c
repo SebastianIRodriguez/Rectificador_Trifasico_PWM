@@ -35,6 +35,15 @@
  */
 
 #include "project.h"
+#include "renolib.h"
+
+// Para controlar:
+volatile float main_id = 0;
+volatile float main_imod = 0;
+volatile AC_MAGN main_magn;
+volatile PARK    main_v_park_out;
+volatile PARK    main_v_park;
+volatile E_PI_CONTROLLER main_pi_id;
 
 // Variables globales para el control de la bestia
 volatile int main_encender_sistema       = 0; // Enciende todo el sistema, arrancando por la precarga
@@ -53,6 +62,8 @@ int estado_cdc = 1;
 int estado_cac = 1;
 int estado_ipm = 1;
 int estado_relay = 1;
+
+static unsigned long int cuenta_encendido = 10;
 
 int main(void)
 {
@@ -77,10 +88,33 @@ int main(void)
         board_digitalRead(BOARD_PRECHARGE_RELAY_STATE_PIN, &relay_state);
         board_digitalRead(BOARD_START_STATE_PIN, &start_state);
 
+        if(start_state == BOARD_CONTACT_CLOSED_LEVEL)
+        {
+            cuenta_encendido++;
+        }
+        else
+        {
+            cuenta_encendido --;
+        }
+
+        if(cuenta_encendido > 50000)
+        {
+            cuenta_encendido = 50000;
+            main_encender_sistema     = 1;
+            main_stop_with_discharge  = 0;
+        }
+        if(cuenta_encendido < 10)
+        {
+            cuenta_encendido = 10;
+            main_encender_sistema    = 0;
+            main_stop_with_discharge = 1;
+        }
+
+
         // Comando manual
-        board_digitalWrite(BOARD_CAC1_COMMAND_PIN, estado_cac);
-        board_digitalWrite(BOARD_CDC1_COMMAND_PIN, estado_cdc);
-        board_digitalWrite(BOARD_IPM_COMMAND_PIN, estado_ipm);
-        board_digitalWrite(BOARD_PRECHARGE_RELAY_COMMAND_PIN, estado_relay);
+        //board_digitalWrite(BOARD_CAC1_COMMAND_PIN, estado_cac);
+        //board_digitalWrite(BOARD_CDC1_COMMAND_PIN, estado_cdc);
+        //board_digitalWrite(BOARD_IPM_COMMAND_PIN, estado_ipm);
+        //board_digitalWrite(BOARD_PRECHARGE_RELAY_COMMAND_PIN, estado_relay);
     }
 }

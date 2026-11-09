@@ -46,7 +46,7 @@ static float U7N_OUT_EN = 0; // Habilita la salida de septimo armonico sec negat
 
 static float EPLL_u0 = 0;    // Variable de ajuste para la integracion de la componenete de continua
 static float EPLL_u1 = 200;  // Variable de ajuste para los cores (amplitud) - 200
-static float EPLL_u2 = 5000; // Ganancia del estimulador, una constante que se ajusta para el funcionamiento del estimador de frecuencia, originalmente 20, luego 12000
+static float EPLL_u2 = 2000; // Ganancia del estimulador, una constante que se ajusta para el funcionamiento del estimador de frecuencia, originalmente 20, luego 12000, finalmente 5000
 static float EPLL_u3 = 200;  // Variable de ajuste para los cores (fase) - 200
 
 /***********************************************************************
@@ -146,17 +146,12 @@ PLL_VARS project_pll_run(float Vr, float Vs, float Vt)
     PSC_U3.e[2] = PSC_U1.e[2];
     SEQ_CORE_MACRO(PSC_U3); // Ejecucion de macro de terc arm. (sec positiva)
 
-    NSC_U7.wo   = FE_U1.out;
-    NSC_U7.e[0] = PSC_U1.e[0];
-    NSC_U7.e[1] = PSC_U1.e[1];
-    NSC_U7.e[2] = PSC_U1.e[2];
-    SEQ_CORE_MACRO(NSC_U7); // Ejecucion de macro de septimo arm. sec negativa
 
     PSC_U5.wo   = FE_U1.out;
     PSC_U5.e[0] = PSC_U1.e[0];
     PSC_U5.e[1] = PSC_U1.e[1];
     PSC_U5.e[2] = PSC_U1.e[2];
-    SEQ_CORE_MACRO(PSC_U5); // Ejecucion de macro de quinto arm. (sec popsitiva)
+    SEQ_CORE_MACRO(PSC_U5); // Ejecucion de macro de quinto arm. (sec positiva)
 
     NSC_U5.wo   = FE_U1.out;
     NSC_U5.e[0] = PSC_U1.e[0];
@@ -169,6 +164,12 @@ PLL_VARS project_pll_run(float Vr, float Vs, float Vt)
     PSC_U7.e[1] = PSC_U1.e[1];
     PSC_U7.e[2] = PSC_U1.e[2];
     SEQ_CORE_MACRO(PSC_U7); // Ejecucion de macro de septimo arm (sec positiva).
+
+    //NSC_U7.wo   = FE_U1.out;
+    //NSC_U7.e[0] = PSC_U1.e[0];
+    //NSC_U7.e[1] = PSC_U1.e[1];
+    //NSC_U7.e[2] = PSC_U1.e[2];
+    //SEQ_CORE_MACRO(NSC_U7); // Ejecucion de macro de septimo arm. sec negativa
 
     INT_CC_A.in = EPLL_u0 * PSC_U1.e[0];
     INT_CC_B.in = EPLL_u0 * PSC_U1.e[1];

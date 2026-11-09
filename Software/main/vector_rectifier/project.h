@@ -43,12 +43,13 @@
 //
 #define PI             3.1415926535  // Famoso numero irracional con multiples aplicaciones
 #define TWO_PI         6.283185307   // El doble de un famoso numero irracional
+#define ONE_THIRD_PI   1.047197551   // Un tercio de un famoso numero irracional
 #define TWO_THIRDS_PI  2.09439510233 // Dos tercios de un famoso numero irracional
 #define FOUR_THIRDS_PI 4.18879020466 // Cuatro tercios de un famoso numero irracional
 #define ONE_SIXTH_PI   0.523598775   // Un sexto de un famoso numero irracional
 #define ISQRT2         1.4142135623  // La raiz cuadrada del primer numero natural par
 
-#define MAX_ERROR_COUNT 10
+#define MAX_ERROR_COUNT 3
 
 /***********************************************************************
  * PLL_VARS
@@ -65,6 +66,7 @@ typedef struct
     float vc;    // Tension de sec principal en dase c
     float mod;   // Modulo del vector rotante de primer armonico (pico)
 } PLL_VARS;
+
 
 /***********************************************************************
  * SIGNAL_3Magn
@@ -94,6 +96,12 @@ typedef struct {
     float theta;
 } ROTATING_VECTOR;
 
+typedef struct {
+    SIGNAL_3Magn v;
+    SIGNAL_3Magn i;
+    PLL_VARS     pll;
+} AC_MAGN;
+
 /***********************************************************************
  * CONVERTER_STATE
  *
@@ -118,7 +126,8 @@ typedef enum {
     NO_ERROR = 0,
     ERROR_PRECHARGE_TIMEOUT, // La precarga llevo demasiado tiempo
     ERROR_QAC_STATE,         // La termica de AC se encuentra en un estado erroneo
-    ERROR_QDC_STATE          // La termica de DC se encuentra en un estado erroneo
+    ERROR_QDC_STATE,         // La termica de DC se encuentra en un estado erroneo
+    ERROR_PLL_FREQ           // La frecuencia del PLL no es valida
 } GLOBAL_ERROR;
 
 //----------------------------------------------------------------------

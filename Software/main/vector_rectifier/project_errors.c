@@ -12,5 +12,5 @@
 #include "project.h"
 
 volatile int          global_error_count = 0;
-volatile GLOBAL_ERROR global_error_array[MAX_ERROR_COUNT];
+volatile GLOBAL_ERROR global_error_array[MAX_ERROR_COUNT] = {NO_ERROR, NO_ERROR, NO_ERROR};
 

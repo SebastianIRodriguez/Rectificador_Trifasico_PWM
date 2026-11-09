@@ -17,12 +17,6 @@
 
 #include <math.h>
 
-typedef struct {
-    SIGNAL_3Magn v;
-    SIGNAL_3Magn i;
-    PLL_VARS     pll;
-} AC_MAGN;
-
 // Variables provenientes de main.c
 extern volatile int main_encender_sistema;
 extern volatile int main_stop_without_discharge;
@@ -81,9 +75,6 @@ int project_interrupt_init()
     pwm_init123_withInterrupt();
     //pwm_init123_withoutInterrupt();
 
-    // Borrar la siguiente linea en versiones superiores de la 5.2.0
-    gpio_enable_epwm();
-
     project_pll_init();
 
     _interrupt_initiated = 1;
@@ -105,15 +96,15 @@ int project_interrupt_init()
 
 interrupt void EPWM1_INT_ISR(void) // PIE3.1 @ 0x000D60  EPWM1_INT (EPWM1)
 {
-    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
+    board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
     PieCtrlRegs.PIEACK.all  = PIEACK_GROUP3; // Must acknowledge the PIE group
     EPwm1Regs.ETCLR.bit.INT = 1;             // limpiar bandera
 
     //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
-    GpioDataRegs.GPASET.bit.GPIO8 = 1;
+    //GpioDataRegs.GPASET.bit.GPIO8 = 1;
 
-    //run_interrupt();
-    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
+    run_interrupt();
+    board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
 }
 
 /***********************************************************************
@@ -127,11 +118,13 @@ interrupt void EPWM1_INT_ISR(void) // PIE3.1 @ 0x000D60  EPWM1_INT (EPWM1)
  *
  * Descripcion: Funcion que se ejecuta en la interrupcion de ePWM1
  **********************************************************************/
+extern AC_MAGN main_magn;
 static void run_interrupt()
 {
-    AC_MAGN  ac_magn;
-    PLL_VARS pll_vars;
-    float    vbus;
+    static unsigned long int tiempo = 0;
+    AC_MAGN                  ac_magn;
+    PLL_VARS                 pll_vars;
+    float                    vbus;
 
     // ******************** ADQUISICION DE VALORES ANALOGICOS ******************** //
 
@@ -139,16 +132,16 @@ static void run_interrupt()
      * Previo al sobremuestreo:
      *     // Tensiones de red
             ac_magn.v.a = ((int)(AdcRegs.ADCRESULT13 >> 4) - OFFSET_RV) * KRV; // R
-            ac_magn.v.b = ((int)(AdcRegs.ADCRESULT15 >> 4) - OFFSET_SV) * KSV; // S
-            ac_magn.v.c = ((int)(AdcRegs.ADCRESULT14 >> 4) - OFFSET_TV) * KTV; // T
+            ac_magn.v.b = ((int)(AdcRegs.ADCRESULT15 >> 4) - OFFSET_SV) * KSV; // S; ADCIN7B
+            ac_magn.v.c = ((int)(AdcRegs.ADCRESULT14 >> 4) - OFFSET_TV) * KTV; // T; ADCIN7A
 
             // Tension de bus
             vbus = ((int)(AdcRegs.ADCRESULT9 >> 4) - OFFSET_YV) * KYV; // Yv
 
             // Corrientes de red
-            ac_magn.i.a = ((int)(AdcRegs.ADCRESULT10 >> 4) - OFFSET_RI) * KRI; // R
-            ac_magn.i.b = ((int)(AdcRegs.ADCRESULT8 >> 4) - OFFSET_SI) * KSI;  // S
-            ac_magn.i.c = ((int)(AdcRegs.ADCRESULT6 >> 4) - OFFSET_TI) * KTI;  // T
+            ac_magn.i.a = ((int)(AdcRegs.ADCRESULT10 >> 4) - OFFSET_RI) * KRI; // R; ADCIN5A
+            ac_magn.i.b = ((int)(AdcRegs.ADCRESULT8 >> 4) - OFFSET_SI) * KSI;  // S; ADCIN4A
+            ac_magn.i.c = ((int)(AdcRegs.ADCRESULT6 >> 4) - OFFSET_TI) * KTI;  // T; ADCIN3A
      * */
     // Red
     ac_magn.v.a = (((long)(AdcRegs.ADCRESULT0 >> 4) + (long)(AdcRegs.ADCRESULT7 >> 4) - 2 * OFFSET_RV) * KRV) / 2; // Rv
@@ -172,8 +165,7 @@ static void run_interrupt()
 #endif
 
     // ******************** PROTECCIONES  ******************** //
-    // Descomentar la siguiente linea en versiones superiores a la 5.3.0
-    //PROTECTION_MACRO(ac_magn.v.a, ac_magn.v.b, ac_magn.v.c, vbus, ac_magn.i.a, ac_magn.i.b, ac_magn.i.c);
+    PROTECTION_MACRO(ac_magn.v.a, ac_magn.v.b, ac_magn.v.c, vbus, ac_magn.i.a, ac_magn.i.b, ac_magn.i.c);
 
     // ******************** TRIP ZONE  ******************** //
     if (GpioDataRegs.GPADAT.bit.GPIO12 == 0)
@@ -189,8 +181,17 @@ static void run_interrupt()
     pll_vars    = project_pll_run(ac_magn.v.a, ac_magn.v.b, ac_magn.v.c);
     ac_magn.pll = pll_vars;
 
+    if ((pll_vars.f > 60 || pll_vars.f < 40) && tiempo > 20000) {
+        PROJECT_ADD_ERROR(ERROR_PLL_FREQ);
+        FORCE_TRIPZONE_INTERRUPT;
+    }
+
+    main_magn = ac_magn;
+
     // ******************** EJECUCION DE LA MEF  ******************** //
     run_converter_mef(ac_magn, vbus);
+
+    tiempo++;
 }
 
 /***********************************************************************
@@ -208,22 +209,25 @@ static void run_interrupt()
 
 static int run_converter_mef(AC_MAGN ac_magn, float vbus)
 {
-    static CONVERTER_STATE estado           = CONVERTER_IDLE;
-    static unsigned int    cuenta_precarga  = 0;
-    static unsigned int    cuenta_aux       = 0; // Cuenta auxiliar
-    static unsigned int    cuenta_aux2      = 0; // Cuenta auxiliar 2
-    static char            f_output_enabled = 0; // Flag output enabled (el PWM llega a los pines)
-    static char            f_idle           = 0; // Flag idle, utilizada para retirar el pwm de los pines una sola vez
-    static char            f_stopping       = 0; // Flag stopping, utilizada para retirar el pwm de los pines una sola vez
-    ROTATING_VECTOR        out;                  // Vector rotante de salida
+    static CONVERTER_STATE estado                 = CONVERTER_IDLE;
+    static unsigned int    cuenta_precarga        = 0;
+    static unsigned int    cuenta_aux             = 0; // Cuenta auxiliar
+    static unsigned int    cuenta_aux2            = 0; // Cuenta auxiliar 2
+    static char            f_output_enabled       = 0; // Flag output enabled (el PWM llega a los pines)
+    static char            f_idle                 = 0; // Flag idle, utilizada para retirar el pwm de los pines una sola vez
+    static char            f_stopping             = 0; // Flag stopping, utilizada para retirar el pwm de los pines una sola vez
+    static int             encender_sistema       = 0;
+    static int             stop_with_discharge    = 0;
+    static int             stop_without_discharge = 0;
+    ROTATING_VECTOR        out; // Vector rotante de salida
 
     // Variables externas a la funcion y al archivo
-    int encender_sistema       = main_encender_sistema;
-    int stop_with_discharge    = main_stop_with_discharge;
-    int stop_without_discharge = main_stop_without_discharge;
+    encender_sistema       = main_encender_sistema;
+    stop_with_discharge    = main_stop_with_discharge;
+    stop_without_discharge = main_stop_without_discharge;
 
     switch (estado) {
-        case CONVERTER_IDLE:
+        case CONVERTER_IDLE: {
             // Dejamos abiertos todos los contactos, reescribir la orden no afecta
             board_openContact(BOARD_IPM_COMMAND_PIN);
             board_openContact(BOARD_CAC1_COMMAND_PIN);
@@ -232,8 +236,7 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
 
             if (f_idle == 0) {
                 f_idle = 1;
-                // Descomentar la siguiente linea en versiones superiores de la 5.2.0
-                //gpio_disable_epwm();
+                gpio_disable_epwm();
             }
 
             if (encender_sistema) {
@@ -261,7 +264,7 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
                     estado           = CONVERTER_PRECHARGING_PASSIVE;
                 }
             }
-            break;
+        } break;
 
         case CONVERTER_PRECHARGING_PASSIVE: {
 
@@ -348,9 +351,9 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
         } break;
 
         case CONVERTER_STOPPING_WITH_DISCHARGE: {
-            if (f_stopping == 0) {
+            if (f_stopping == 1) {
                 cuenta_aux = 0;
-                f_stopping = 1;
+                f_stopping = 0;
                 gpio_disable_epwm(); // Apagamos el modulo ePWM y ponemos todas las salidas a 0
             }
 
@@ -359,7 +362,7 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
 
                 board_openContact(BOARD_CAC1_COMMAND_PIN); // Desconectamos la carga
 
-                if (cuenta_aux > 50000) {
+                if (cuenta_aux > 20000) {
                     board_openContact(BOARD_CAC1_COMMAND_PIN);
                     board_openContact(BOARD_IPM_COMMAND_PIN);
                     encender_sistema = 0;
@@ -372,9 +375,9 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
         } break;
 
         case CONVERTER_STOPPING_WITHOUT_DISCHARGE: {
-            if (f_stopping == 0) {
+            if (f_stopping == 1) {
                 cuenta_aux = 0;
-                f_stopping = 1;
+                f_stopping = 0;
                 gpio_disable_epwm(); // Apagamos el modulo ePWM y ponemos todas las salidas a 0
             }
 
