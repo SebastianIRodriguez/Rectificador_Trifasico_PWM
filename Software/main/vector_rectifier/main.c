@@ -63,7 +63,7 @@ int main(void)
     InitWatchdog(); // Initialize the Watchdog Timer (FILE: WatchDog.c)
 
     // Iniciamos el ADC para el muestreo de las tensiones y corrientes RST, ademas del bus de continua
-    adc_init(ADC_ALL_SIM_CODE);
+    adc_init(ADC_RECTIFIER_SIM_CODE);
 
     // Dentro de esta funcion se inicializa y arranca todo lo relacionado a la maquina
     project_interrupt_init();

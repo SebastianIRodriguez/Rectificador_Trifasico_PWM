@@ -22,6 +22,7 @@ typedef enum {
     ADC_CH0_SIM_INT_CODE,       // Canal 0, muestreo simultaneo con SOC desde ePWM, interrupcion habilitada
     ADC_ALL_SIM_INT_CODE,       // Todos los canales, muestreo simultaneo con SOC desde ePWM, interrupcion habilitada
     ADC_ALL_SIM_CODE,           // Todos los canales, muestreo simultaneo con SOC desde ePWM, interrupcion deshabilitada
+    ADC_RECTIFIER_SIM_CODE,     // Canaleas necesarios para el rectificador (3, 4, 5, 6, 7), muestreo simultaneo con SOC desde ePWM, interrupcion deshabilitada
     ADC_LAST_CODE               // Utilizado con fines de control, no es un codigo valido de uso
 } ADC_MODE;
 

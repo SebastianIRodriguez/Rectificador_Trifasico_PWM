@@ -337,7 +337,7 @@ static void pwm4_init()
 void pwm_init123_withInterrupt()
 {
 	static int PERIOD           = PWM_COUNT_PERIOD; // Cuentas para lograr una frecuencia de 10 KHz, antes 7500
-	static int SOC_HALF_TIME    = 144;		        // Estimacion de cuentas para las conversiones analogicas antes 420
+	static int SOC_HALF_TIME    = 210;		        // Estimacion de cuentas para las conversiones analogicas antes 420, luego 144
 	disableEPWMClock();					            // Necesario para que esten sincronizados
 
 	// EPWM Module 1 config

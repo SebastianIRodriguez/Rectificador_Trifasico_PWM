@@ -106,14 +106,14 @@ int project_interrupt_init()
 interrupt void EPWM1_INT_ISR(void) // PIE3.1 @ 0x000D60  EPWM1_INT (EPWM1)
 {
     //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
-    PieCtrlRegs.PIEACK.all  = PIEACK_GROUP3;         // Must acknowledge the PIE group
-    EPwm1Regs.ETCLR.bit.INT = 1;                     // limpiar bandera
+    PieCtrlRegs.PIEACK.all  = PIEACK_GROUP3; // Must acknowledge the PIE group
+    EPwm1Regs.ETCLR.bit.INT = 1;             // limpiar bandera
 
     //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 1); // Para medir la duracion de la interrupcion
     GpioDataRegs.GPASET.bit.GPIO8 = 1;
 
     //run_interrupt();
-   //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
+    //board_digitalWrite(BOARD_GPIO08_COMMAND_PIN, 0); // Para medir la duracion de la interrupcion
 }
 
 /***********************************************************************
@@ -135,18 +135,33 @@ static void run_interrupt()
 
     // ******************** ADQUISICION DE VALORES ANALOGICOS ******************** //
 
-    // Tensiones de red
-    ac_magn.v.a = ((int)(AdcRegs.ADCRESULT13 >> 4) - OFFSET_RV) * KRV; // R
-    ac_magn.v.b = ((int)(AdcRegs.ADCRESULT15 >> 4) - OFFSET_SV) * KSV; // S
-    ac_magn.v.c = ((int)(AdcRegs.ADCRESULT14 >> 4) - OFFSET_TV) * KTV; // T
+    /*
+     * Previo al sobremuestreo:
+     *     // Tensiones de red
+            ac_magn.v.a = ((int)(AdcRegs.ADCRESULT13 >> 4) - OFFSET_RV) * KRV; // R
+            ac_magn.v.b = ((int)(AdcRegs.ADCRESULT15 >> 4) - OFFSET_SV) * KSV; // S
+            ac_magn.v.c = ((int)(AdcRegs.ADCRESULT14 >> 4) - OFFSET_TV) * KTV; // T
+
+            // Tension de bus
+            vbus = ((int)(AdcRegs.ADCRESULT9 >> 4) - OFFSET_YV) * KYV; // Yv
+
+            // Corrientes de red
+            ac_magn.i.a = ((int)(AdcRegs.ADCRESULT10 >> 4) - OFFSET_RI) * KRI; // R
+            ac_magn.i.b = ((int)(AdcRegs.ADCRESULT8 >> 4) - OFFSET_SI) * KSI;  // S
+            ac_magn.i.c = ((int)(AdcRegs.ADCRESULT6 >> 4) - OFFSET_TI) * KTI;  // T
+     * */
+    // Red
+    ac_magn.v.a = (((long)(AdcRegs.ADCRESULT0 >> 4) + (long)(AdcRegs.ADCRESULT7 >> 4) - 2 * OFFSET_RV) * KRV) / 2; // Rv
+    ac_magn.i.a = (((long)(AdcRegs.ADCRESULT1 >> 4) + (long)(AdcRegs.ADCRESULT8 >> 4) - 2 * OFFSET_RI) * KRI) / 2; // Ri
+
+    ac_magn.v.b = (((long)(AdcRegs.ADCRESULT2 >> 4) + (long)(AdcRegs.ADCRESULT9 >> 4) - 2 * OFFSET_SV) * KSV) / 2;  // Sv
+    ac_magn.i.b = (((long)(AdcRegs.ADCRESULT3 >> 4) + (long)(AdcRegs.ADCRESULT10 >> 4) - 2 * OFFSET_SI) * KSI) / 2; // Si
+
+    ac_magn.v.c = (((long)(AdcRegs.ADCRESULT4 >> 4) + (long)(AdcRegs.ADCRESULT11 >> 4) - 2 * OFFSET_TV) * KTV) / 2; // Tv
+    ac_magn.i.c = (((long)(AdcRegs.ADCRESULT5 >> 4) + (long)(AdcRegs.ADCRESULT12 >> 4) - 2 * OFFSET_TI) * KTI) / 2; // Ti
 
     // Tension de bus
-    vbus = ((int)(AdcRegs.ADCRESULT9 >> 4) - OFFSET_YV) * KYV; // Yv
-
-    // Corrientes de red
-    ac_magn.i.a = ((int)(AdcRegs.ADCRESULT10 >> 4) - OFFSET_RI) * KRI; // R
-    ac_magn.i.b = ((int)(AdcRegs.ADCRESULT8 >> 4) - OFFSET_SI) * KSI;  // S
-    ac_magn.i.c = ((int)(AdcRegs.ADCRESULT6 >> 4) - OFFSET_TI) * KTI;  // T
+    vbus = (((long)(AdcRegs.ADCRESULT6 >> 4) + (long)(AdcRegs.ADCRESULT13 >> 4) - 2 * OFFSET_YV) * KYV) / 2; // Yv
 
 // Adquisicion de senales simuladas
 #if SIM_INPUT_ENABLED == 1
@@ -157,7 +172,7 @@ static void run_interrupt()
 #endif
 
     // ******************** PROTECCIONES  ******************** //
-    // Descomentar la siguiente linea en versiones superiores a la 5.2.0
+    // Descomentar la siguiente linea en versiones superiores a la 5.3.0
     //PROTECTION_MACRO(ac_magn.v.a, ac_magn.v.b, ac_magn.v.c, vbus, ac_magn.i.a, ac_magn.i.b, ac_magn.i.c);
 
     // ******************** TRIP ZONE  ******************** //
@@ -214,6 +229,7 @@ static int run_converter_mef(AC_MAGN ac_magn, float vbus)
             board_openContact(BOARD_CAC1_COMMAND_PIN);
             board_openContact(BOARD_CDC1_COMMAND_PIN);
             board_openContact(BOARD_PRECHARGE_RELAY_COMMAND_PIN);
+
             if (f_idle == 0) {
                 f_idle = 1;
                 // Descomentar la siguiente linea en versiones superiores de la 5.2.0
