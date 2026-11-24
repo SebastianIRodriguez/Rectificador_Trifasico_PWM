@@ -1,0 +1,13 @@
+Tensión simulada con 25V pico
+Quickprint 3 y 4, 5: desfasaje tensión y corriente motor en vacío
+id: 0.6 (0.58) 
+iq: -0.35
+
+Quickprint 6, 7 8 : desfasaje tensión y corriente motor bloqueado
+id: 1.46
+iq: -1.1
+
+Tensión simulada con 20V pico
+Quickprint 9, 10, 11 : desfasaje tensión y corriente resistencias triángulo
+id: 3.24
+iq: -0.33
